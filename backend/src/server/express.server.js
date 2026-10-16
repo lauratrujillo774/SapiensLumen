@@ -3,6 +3,7 @@ import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import router from '../routes/index.js';
 import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
 const carpetaUploads = fileURLToPath(new URL('../../uploads', import.meta.url));
 
@@ -29,6 +30,8 @@ class Server {
 
         // El front se sirve desde el mismo servidor (nunca se publica backend/, ahí está el .env)
         this.app.use(express.static(carpetaFrontend));
+        // Los navegadores piden /favicon.ico por su cuenta: se les da el patico
+        this.app.get('/favicon.ico', (req, res) => res.type('png').sendFile(path.join(carpetaFrontend, 'img', 'pato.png')));
         this.app.get('/', (req, res) => res.redirect('/inicio/inicio.html'));
     }
 

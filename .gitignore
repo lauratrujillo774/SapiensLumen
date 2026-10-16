@@ -1,0 +1,6 @@
+node_modules/
+.env
+.env.*
+backend/uploads/avatars/*
+backend/database/respaldo.sql
+*.log

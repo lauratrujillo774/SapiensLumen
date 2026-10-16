@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Perfil</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/profile.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/perfil-editor.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+
+    <nav class="side-nav">
+      <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html" class="active"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="page-title">
+        <h1>Tu perfil</h1>
+        <p>Consulta tu progreso, estadísticas y datos de cuenta</p>
+      </section>
+
+      <!-- Cabecera del participante -->
+      <section class="profile-card">
+        <div class="avatar-container">
+          <div class="avatar"><img id="profileAvatar" data-user-avatar src="../img/pato.png" alt="Tu foto de perfil"></div>
+          <div class="nivel-badge">Nivel 1</div>
+        </div>
+
+        <div class="info-usuario">
+          <h2 data-user-fullname>Usuario</h2>
+          <span class="rango" id="rangoNivel">Aprendiz de la Luz</span>
+
+          <div class="progreso-container">
+            <div class="progreso-texto">
+              <span id="textoNivel">Progreso de nivel</span>
+              <span id="xpNivel">0 pts</span>
+            </div>
+            <div class="progress"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <button class="edit-btn" id="irAEditar"><i class="fa-solid fa-pen"></i><span>Editar mis datos</span></button>
+      </section>
+
+      <section class="profile-card" id="companionCard" style="margin-top:16px;display:flex;align-items:center;gap:18px;">
+        <img id="profileCompanionImg" src="../img/companions/kiwi.png" alt="Compañero" style="width:88px;height:88px;object-fit:contain;">
+        <div>
+          <h3 style="margin:0 0 4px;font-size:1.05rem;">Tu compañero</h3>
+          <p id="profileCompanionName" style="margin:0;font-weight:600;color:var(--olive);">—</p>
+          <p id="profileCompanionDesc" style="margin:4px 0 0;font-size:0.88rem;color:var(--text-light);"></p>
+        </div>
+      </section>
+
+      <!-- Tarjetas de estadísticas -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon oro"><i class="fa-solid fa-star"></i></div>
+          <h3>Puntos totales</h3>
+          <p class="txt-oro">0</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon verde"><i class="fa-solid fa-trophy"></i></div>
+          <h3>Juegos completados</h3>
+          <p class="txt-verde">0</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon naranja"><i class="fa-solid fa-fire"></i></div>
+          <h3>Racha de días</h3>
+          <p class="txt-naranja">0</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon cafe"><i class="fa-solid fa-medal"></i></div>
+          <h3>Logros</h3>
+          <p class="txt-cafe">0 / 0</p>
+        </div>
+      </section>
+
+      <!-- Datos de la cuenta: cada dato se edita por separado -->
+      <section class="account-card" id="datosCuenta">
+        <h3>Datos de la cuenta</h3>
+        <p class="pe-intro">Pulsa <b>Editar</b> en el dato que quieras cambiar. Cada uno se guarda por separado.</p>
+        <div id="filasCuenta"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Bottom nav móvil -->
+  <nav class="bottom-nav">
+    <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html" class="active"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+    <script src="../js/difficulty.js"></script>
+<script src="../js/companions.js"></script>
+<script src="../js/auth.js"></script>
+  <script>
+    // Cerrar sidebar con botón X
+    document.querySelector('.sidebar-close')?.addEventListener('click', () => {
+      document.querySelector('.sidebar')?.classList.remove('open');
+      document.querySelector('.sidebar-overlay')?.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    });
+
+    // Estadísticas reales (desde la base de datos)
+    (async function () {
+      const [prog, logros] = await Promise.all([SapiensAuth.api('/progreso'), SapiensAuth.api('/logros')]);
+      const tarjetas = document.querySelectorAll('.stat-card p');
+      if (prog.ok) {
+        const p = prog.data;
+        document.querySelector('.nivel-badge').textContent = 'Nivel ' + p.nivel.id;
+        document.getElementById('rangoNivel').textContent = p.nivel.nombre.replace(/^Nivel \d+ - /, '');
+        const desde = p.nivel.desde;
+        const hasta = p.nivel.siguiente ? p.nivel.siguiente.puntos : null;
+        document.getElementById('textoNivel').textContent = hasta ? 'Hacia «' + p.nivel.siguiente.nombre.replace(/^Nivel \d+ - /, '') + '»' : 'Nivel máximo';
+        document.getElementById('xpNivel').textContent = p.puntosTotales.toLocaleString('es-CO') + (hasta ? ' / ' + hasta.toLocaleString('es-CO') : '') + ' pts';
+        document.querySelector('.progress-fill').style.width = (hasta ? Math.min(100, ((p.puntosTotales - desde) / (hasta - desde)) * 100) : 100) + '%';
+        tarjetas[0].textContent = p.puntosTotales.toLocaleString('es-CO');
+        tarjetas[1].textContent = p.retosCompletados;
+        tarjetas[2].textContent = p.racha;
+      }
+      if (logros.ok) tarjetas[3].textContent = logros.data.obtenidas + ' / ' + logros.data.total;
+    })();
+
+  </script>
+
+  <script src="../js/shell.js"></script>
+  <script src="../js/perfil-editor.js"></script>
+</body>
+</html>

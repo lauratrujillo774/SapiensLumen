@@ -1,0 +1,136 @@
+/* ============================================================
+   Juego de práctica (estilo Kahoot / Duolingo, sin presión de tiempo)
+   ============================================================ */
+
+.jg-root {
+  --ln-escala: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 22px;
+  margin: 18px 16px;
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-size: calc(1rem * var(--ln-escala));
+}
+.jg-root.t1 { --ln-escala: 1.15; }
+.jg-root.t2 { --ln-escala: 1.3; }
+.jg-root.t3 { --ln-escala: 1.5; }
+.jg-root.espaciado { line-height: 1.9; letter-spacing: 0.03em; word-spacing: 0.12em; }
+.jg-root.calma *, .jg-root.calma *::before, .jg-root.calma *::after { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .jg-root *, .jg-root *::before, .jg-root *::after { animation: none !important; transition: none !important; }
+}
+.jg-root h2 { font-size: 1.35em; margin: 0 0 8px; line-height: 1.3; }
+.jg-root h3 { font-size: 1.1em; margin: 0 0 6px; }
+.jg-root p { margin: 0 0 12px; line-height: 1.7; }
+.jg-muted { color: var(--text-light); }
+
+/* ---------- botones ---------- */
+.jg-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 26px; border-radius: 999px; border: 2px solid var(--btn);
+  background: var(--btn); color: #fff; font: inherit; font-weight: 700; cursor: pointer;
+  transition: transform .15s, background .2s;
+}
+.jg-btn:hover:not(:disabled) { transform: translateY(-2px); background: var(--btn-hover); border-color: var(--btn-hover); }
+.jg-btn.sec { background: transparent; color: var(--olive); border-color: var(--olive); }
+.jg-btn.sec:hover:not(:disabled) { background: var(--olive); color: #fff; }
+.jg-btn:disabled { opacity: .45; cursor: not-allowed; }
+.jg-btn:focus-visible, .jg-mini:focus-visible, .jg-resp:focus-visible, .jg-input:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.jg-back { color: var(--olive); font-weight: 600; text-decoration: none; background: none; border: none; font: inherit; cursor: pointer; padding: 0; }
+.jg-mini {
+  padding: 7px 12px; border-radius: 999px; border: 1.5px solid var(--border); background: var(--surface-solid);
+  color: var(--text); font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer;
+}
+.jg-mini[aria-pressed="true"] { background: var(--olive); color: #fff; border-color: var(--olive); }
+
+/* ---------- avisos y carga ---------- */
+.jg-estado { text-align: center; padding: 36px 12px; }
+.jg-estado .ico { font-size: 2.6em; display: block; margin-bottom: 10px; }
+.jg-spinner { width: 46px; height: 46px; margin: 0 auto 16px; border-radius: 50%; border: 5px solid var(--border); border-top-color: var(--olive); animation: jg-gira 1s linear infinite; }
+@keyframes jg-gira { to { transform: rotate(360deg); } }
+.jg-acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 16px; }
+
+/* ---------- portada ---------- */
+.jg-portada { text-align: center; padding: 10px 0 6px; }
+.jg-portada .gran { font-size: 3.4em; display: block; }
+.jg-reglas { text-align: left; max-width: 520px; margin: 14px auto; padding-left: 1.3em; line-height: 1.9; }
+
+/* ---------- barra superior ---------- */
+.jg-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.jg-barra { flex: 1 1 160px; height: 12px; border-radius: 12px; background: var(--border); overflow: hidden; }
+.jg-barra > div { height: 100%; background: linear-gradient(90deg, var(--green-soft), var(--blue-mid)); border-radius: 12px; transition: width .3s; }
+.jg-chip { padding: 6px 12px; border-radius: 999px; background: var(--surface-solid); border: 1px solid var(--border); font-weight: 700; font-size: .9em; white-space: nowrap; }
+.jg-herr { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+
+/* ---------- pregunta ---------- */
+.jg-pregunta { background: var(--surface-solid); border: 1px solid var(--border); border-radius: 18px; padding: 22px; margin-bottom: 16px; }
+.jg-pregunta .tipo { display: inline-block; margin-bottom: 8px; padding: 3px 12px; border-radius: 999px; background: rgba(41, 182, 246, .15); color: var(--blue); font-size: .75em; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.jg-pregunta h2 { font-size: 1.4em; margin: 0; }
+.jg-pregunta h2:focus { outline: none; }
+
+.jg-resps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+.jg-resps.vf { grid-template-columns: repeat(2, 1fr); }
+.jg-resp {
+  position: relative; display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 14px 16px;
+  border: 3px solid transparent; border-radius: 16px; color: #fff; font: inherit; font-weight: 700; text-align: left; cursor: pointer;
+  background: var(--c); transition: transform .12s, box-shadow .12s, opacity .2s; line-height: 1.35;
+}
+.jg-resp:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, .2); }
+.jg-resp .forma { font-size: 1.5em; flex: 0 0 auto; width: 1.4em; text-align: center; opacity: .95; }
+.jg-resp[aria-pressed="true"] { border-color: var(--text); box-shadow: 0 0 0 4px rgba(0, 0, 0, .18); }
+.jg-resp.a { --c: #E53935; }
+.jg-resp.b { --c: #1E88E5; }
+.jg-resp.c { --c: #F9A825; color: #1B1B1B; }
+.jg-resp.d { --c: #43A047; }
+.jg-resp.verd { --c: #1E88E5; justify-content: center; text-align: center; font-size: 1.15em; }
+.jg-resp.fals { --c: #E53935; justify-content: center; text-align: center; font-size: 1.15em; }
+.jg-resp:disabled { cursor: default; }
+.jg-resp.bien { box-shadow: 0 0 0 5px #66BB6A; }
+.jg-resp.mal { opacity: .45; text-decoration: line-through; }
+.jg-resp .marca { position: absolute; top: 6px; right: 10px; font-size: 1.2em; }
+
+.jg-input {
+  width: 100%; padding: 16px 18px; border: 3px solid var(--border); border-radius: 16px; background: var(--surface-solid);
+  color: var(--text); font: inherit; font-size: 1.2em; margin-bottom: 16px;
+}
+.jg-input:focus { border-color: var(--blue); }
+
+.jg-pistas { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.jg-pista { padding: 12px 14px; border-radius: 12px; background: rgba(255, 238, 88, .3); border-left: 5px solid var(--orange); line-height: 1.6; }
+
+.jg-fila { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ---------- comentarios tras responder ---------- */
+.jg-fb { border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; border: 2px solid; }
+.jg-fb.ok { background: rgba(102, 187, 106, .2); border-color: #66BB6A; }
+.jg-fb.casi { background: rgba(255, 167, 38, .18); border-color: #FFA726; }
+.jg-fb.no { background: rgba(229, 57, 53, .12); border-color: #E57373; }
+.jg-fb strong { display: block; font-size: 1.15em; margin-bottom: 4px; }
+.jg-fb p { margin: 6px 0 0; }
+.jg-fb details { margin-top: 10px; }
+.jg-fb summary { cursor: pointer; font-weight: 700; color: var(--olive); }
+.jg-fb .exp { margin-top: 8px; padding: 12px 14px; border-radius: 12px; background: var(--surface-solid); line-height: 1.7; white-space: pre-line; }
+
+/* ---------- resultados ---------- */
+.jg-final { text-align: center; }
+.jg-estrellas { font-size: 3.2em; letter-spacing: .1em; margin: 6px 0; }
+.jg-estrellas .on { color: #FFB300; animation: jg-brinca .6s ease both; }
+.jg-estrellas .off { color: var(--border); }
+@keyframes jg-brinca { 0% { transform: scale(.3) rotate(-20deg); opacity: 0; } 70% { transform: scale(1.25); } 100% { transform: scale(1); opacity: 1; } }
+.jg-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 18px 0; }
+.jg-dato { padding: 14px 10px; border-radius: 16px; background: var(--surface-solid); border: 1px solid var(--border); }
+.jg-dato b { display: block; font-size: 1.6em; }
+.jg-dato span { font-size: .85em; color: var(--text-light); }
+.jg-nivel { text-align: left; margin: 14px auto; max-width: 480px; }
+.jg-repaso { text-align: left; margin-top: 18px; }
+.jg-repaso details { border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; margin-bottom: 8px; background: var(--surface-solid); }
+.jg-repaso summary { cursor: pointer; font-weight: 600; }
+.jg-repaso .r { margin-top: 8px; }
+
+@media (max-width: 600px) {
+  .jg-root { padding: 14px; margin: 12px 8px; }
+  .jg-resps { grid-template-columns: 1fr; }
+  .jg-resps.vf { grid-template-columns: 1fr 1fr; }
+}

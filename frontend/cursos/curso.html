@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Curso</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/path.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/ajolote.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+    <nav class="side-nav">
+      <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html" class="active"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="path-header">
+      <div class="path-title">
+        <div class="path-icon" id="cursoIcono" style="background:#2E7D32;"><i class="fa-solid fa-book-open"></i></div>
+        <div>
+          <h1 id="cursoTitulo">Cargando…</h1>
+          <p id="cursoSubtitulo">&nbsp;</p>
+        </div>
+      </div>
+      <div class="path-stats">
+        <div class="stat-pill xp"><i class="fa-solid fa-circle-check"></i> <span id="hechosVal">0</span>/<span id="totalVal">0</span> temas</div>
+        <div class="stat-pill streak"><i class="fa-solid fa-graduation-cap"></i> <span id="gradoVal">—</span>°</div>
+      </div>
+    </div>
+
+    <div class="path-ajolote-row">
+      <div id="ajolotePath"></div>
+    </div>
+
+    <p class="path-note">Elige el tema que quieras estudiar. No hace falta seguir un orden.</p>
+
+    <div class="unit-section" id="pathContainer">
+      <p class="path-msg">Cargando los temas…</p>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html" class="active"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script src="../js/difficulty.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/curriculo.js"></script>
+  <script src="../js/companions.js"></script>
+  <script src="../js/ajolote.js"></script>
+  <script>
+    (async function () {
+      const esc = SapiensCurriculo.esc;
+      const contenedor = document.getElementById('pathContainer');
+      const params = new URLSearchParams(window.location.search);
+      const areaId = parseInt(params.get('area'), 10);
+      const grado = parseInt(params.get('grado'), 10) || SapiensCurriculo.gradoActual();
+
+      function mensaje(html) {
+        contenedor.innerHTML = '<p class="path-msg">' + html + '</p>';
+        document.getElementById('cursoTitulo').textContent = 'Curso';
+      }
+
+      if (!areaId || !grado) {
+        return mensaje('No encontramos ese curso. <a href="../cursos/cursos.html">Volver a mis cursos</a>');
+      }
+
+      const r = await SapiensCurriculo.temas(areaId, grado);
+      if (!r.ok) {
+        return mensaje(esc(r.error) + ' <a href="../cursos/cursos.html">Volver a mis cursos</a>');
+      }
+
+      await SapiensCurriculo.cargarHechos();   // las marcas de "tema hecho" son las de ESTA cuenta
+      const { area, temas } = r.data;
+      const ui = SapiensCurriculo.visual(area.clave, area.nombre);
+      document.title = 'Sapiens Lumen | ' + ui.nombre + ' ' + grado + '°';
+      document.getElementById('cursoTitulo').textContent = ui.nombre;
+      document.getElementById('cursoSubtitulo').textContent = grado + '° grado · ' + temas.length + ' temas';
+      document.getElementById('cursoIcono').style.background = ui.color;
+      document.getElementById('cursoIcono').innerHTML = '<i class="fa-solid ' + ui.icon + '"></i>';
+      document.getElementById('totalVal').textContent = temas.length;
+      document.getElementById('gradoVal').textContent = grado;
+      SapiensCurriculo.guardarUltimo({ areaId: area.id, grado: grado, clave: area.clave });
+
+      function actualizarHechos() {
+        document.getElementById('hechosVal').textContent = SapiensCurriculo.temasHechosDeArea(area.id);
+      }
+      actualizarHechos();
+
+      const nodos = document.createElement('div');
+      nodos.className = 'path-nodes';
+      nodos.style.setProperty('--area', ui.color);
+      nodos.innerHTML = '<div class="path-line"></div>';
+
+      temas.forEach((tema, i) => {
+        const hecho = SapiensCurriculo.esTemaHecho(tema.id);
+        const nodo = document.createElement('a');
+        nodo.className = 'node tema' + (hecho ? ' completed' : '');
+        nodo.href = '../cursos/tema.html?tema=' + tema.id;
+        nodo.style.textDecoration = 'none';
+        nodo.setAttribute('aria-label', 'Tema ' + (i + 1) + ': ' + tema.nombre);
+        nodo.innerHTML =
+          '<div class="node-circle">' + (hecho ? '<i class="fa-solid fa-check"></i>' : (i + 1)) + '</div>' +
+          '<div class="node-label">' + esc(tema.nombre) + '</div>';
+        nodos.appendChild(nodo);
+      });
+
+      contenedor.innerHTML = '';
+      contenedor.appendChild(nodos);
+    })();
+
+    document.querySelector('.sidebar-close')?.addEventListener('click', () => {
+      document.querySelector('.sidebar')?.classList.remove('open');
+      document.querySelector('.sidebar-overlay')?.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    });
+    if (window.SapiensAjolote) {
+      SapiensAjolote.mount('#ajolotePath', { mood: 'wave', phrase: '¡Elige un tema!' });
+    }
+  </script>
+  <script src="../js/shell.js"></script>
+</body>
+</html>

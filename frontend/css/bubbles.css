@@ -1,0 +1,387 @@
+/* ========== Capa ambiental Frutiger Aero: burbujas + peces ========== */
+.bubbles-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  /* Nunca por encima de botones, opciones ni modales */
+}
+body { isolation: isolate; }
+.bubbles-layer.aurora-mode {
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 18% 8%, rgba(110, 220, 207, 0.18), transparent 55%),
+    radial-gradient(ellipse at 84% 82%, rgba(158, 142, 231, 0.16), transparent 52%);
+}
+.aurora-backdrop {
+  position: absolute;
+  inset: -25%;
+  opacity: 1;
+  background:
+    radial-gradient(ellipse at 20% 22%, rgba(38, 193, 137, 0.5), transparent 34%),
+    radial-gradient(ellipse at 54% 18%, rgba(45, 178, 207, 0.48), transparent 36%),
+    radial-gradient(ellipse at 82% 27%, rgba(135, 91, 209, 0.46), transparent 34%),
+    radial-gradient(ellipse at 50% 92%, rgba(83, 190, 139, 0.3), transparent 48%);
+  background-size: 140% 140%;
+  animation: aurora-sky 34s ease-in-out infinite alternate;
+}
+.aurora-canvas {
+  position: absolute;
+  inset: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.bubbles-layer.aurora-mode .aurora-canvas { display: block; }
+.aurora-backdrop::before,
+.aurora-backdrop::after {
+  content: "";
+  position: absolute;
+  top: -8%;
+  width: 125%;
+  height: 105%;
+  filter: blur(12px);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 58%, transparent 88%);
+  transform-origin: top center;
+  mix-blend-mode: multiply;
+}
+.aurora-backdrop::before {
+  left: -12%;
+  background:
+    linear-gradient(108deg, transparent 12%, rgba(44, 194, 127, 0.72) 27%, rgba(57, 189, 187, 0.76) 38%, rgba(100, 191, 202, 0.62) 47%, transparent 68%),
+    linear-gradient(76deg, transparent 38%, rgba(113, 91, 205, 0.58) 52%, rgba(49, 182, 148, 0.64) 63%, transparent 79%);
+  animation: aurora-curtain-one 28s ease-in-out infinite alternate;
+}
+.aurora-backdrop::after {
+  right: -18%;
+  top: 2%;
+  background:
+    linear-gradient(72deg, transparent 15%, rgba(109, 82, 198, 0.62) 31%, rgba(57, 190, 166, 0.7) 44%, rgba(59, 178, 202, 0.62) 53%, transparent 72%),
+    linear-gradient(118deg, transparent 42%, rgba(55, 190, 133, 0.56) 57%, rgba(119, 94, 208, 0.56) 68%, transparent 83%);
+  animation: aurora-curtain-two 36s ease-in-out infinite alternate;
+}
+@keyframes aurora-sky {
+  0% { background-position: 0% 20%; transform: scale(1) rotate(-2deg); }
+  100% { background-position: 100% 80%; transform: scale(1.08) rotate(2deg); }
+}
+@keyframes aurora-curtain-one {
+  0% { transform: translate3d(-5vw, -2vh, 0) skewX(-8deg) scaleY(0.88); }
+  100% { transform: translate3d(7vw, 5vh, 0) skewX(8deg) scaleY(1.08); }
+}
+@keyframes aurora-curtain-two {
+  0% { transform: translate3d(5vw, 3vh, 0) skewX(7deg) scaleY(1.05); }
+  100% { transform: translate3d(-6vw, -4vh, 0) skewX(-7deg) scaleY(0.9); }
+}
+[data-theme="dark"] .bubbles-layer.aurora-mode {
+  background:
+    radial-gradient(ellipse at 18% 8%, rgba(48, 190, 173, 0.25), transparent 55%),
+    radial-gradient(ellipse at 84% 82%, rgba(125, 100, 202, 0.25), transparent 52%);
+}
+[data-theme="dark"] .aurora-backdrop {
+  opacity: 0.82;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(ellipse at 20% 22%, rgba(32, 206, 170, 0.34), transparent 34%),
+    radial-gradient(ellipse at 54% 18%, rgba(65, 174, 218, 0.32), transparent 36%),
+    radial-gradient(ellipse at 82% 27%, rgba(135, 91, 214, 0.34), transparent 34%),
+    radial-gradient(ellipse at 50% 92%, rgba(98, 180, 145, 0.2), transparent 48%);
+}
+.bubbles-layer.aurora-mode .fish-wrap,
+.bubbles-layer.aurora-mode .soap-bubble,
+.bubbles-layer.fish-mode .aurora-backdrop {
+  display: none;
+}
+body.exercise-page .bubbles-layer {
+  z-index: 0;
+  opacity: 0.85;
+}
+body.exercise-page .bubbles-layer.aurora-mode { z-index: 0; }
+/* En ejercicio, peces un poco más transparentes para no tapar texto */
+body.exercise-page .swim-fish {
+  opacity: 0.55 !important;
+}
+body.exercise-page .soap-bubble {
+  opacity: 0.45 !important;
+}
+
+/* —— Burbujas nítidas (pompas de jabón) —— */
+.soap-bubble {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 18%, transparent 42%),
+    radial-gradient(circle at 70% 72%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(180, 230, 255, 0.12) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  box-shadow:
+    inset 0 0 12px rgba(255, 255, 255, 0.35),
+    inset 2px 2px 6px rgba(255, 255, 255, 0.5),
+    0 4px 16px rgba(100, 180, 220, 0.18),
+    0 0 1px rgba(255, 255, 255, 0.9);
+  opacity: 0.85;
+}
+
+[data-theme="dark"] .soap-bubble {
+  background:
+    radial-gradient(circle at 30% 28%, rgba(220, 245, 255, 0.9) 0%, rgba(180, 220, 255, 0.25) 18%, transparent 42%),
+    radial-gradient(circle at 70% 72%, rgba(120, 200, 255, 0.12) 0%, transparent 40%),
+    linear-gradient(145deg, rgba(160, 220, 255, 0.35) 0%, rgba(80, 140, 180, 0.08) 45%, rgba(100, 180, 220, 0.15) 100%);
+  border: 1.5px solid rgba(180, 230, 255, 0.55);
+  box-shadow:
+    inset 0 0 14px rgba(150, 220, 255, 0.25),
+    inset 2px 2px 8px rgba(200, 240, 255, 0.35),
+    0 4px 20px rgba(40, 120, 180, 0.25),
+    0 0 1px rgba(180, 230, 255, 0.7);
+  opacity: 0.75;
+}
+
+.soap-bubble::after {
+  content: "";
+  position: absolute;
+  top: 12%;
+  left: 18%;
+  width: 28%;
+  height: 18%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  filter: blur(1px);
+  transform: rotate(-25deg);
+}
+
+[data-theme="dark"] .soap-bubble::after {
+  background: rgba(220, 245, 255, 0.55);
+}
+
+/* —— Contenedor del pez (posición + flip) —— */
+.fish-wrap {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+  left: 0;
+  top: 0;
+}
+
+/* —— Imagen del pez con animación de cola —— */
+.swim-fish {
+  display: block;
+  pointer-events: none;
+  object-fit: contain;
+  image-rendering: auto;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.22));
+  opacity: 0.96;
+  /* Pivote cerca de la cabeza/cuerpo para que la cola se mueva más */
+  transform-origin: 30% 50%;
+  animation: tailWag var(--wag-duration, 0.55s) ease-in-out infinite;
+}
+
+[data-theme="dark"] .swim-fish {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)) brightness(0.95);
+  opacity: 0.93;
+}
+
+/* Movimiento de cola: oscilación de rotación + leve estiramiento */
+@keyframes tailWag {
+  0%   { transform: rotate(0deg) skewY(0deg); }
+  25%  { transform: rotate(5deg) skewY(1.5deg); }
+  50%  { transform: rotate(0deg) skewY(0deg); }
+  75%  { transform: rotate(-5deg) skewY(-1.5deg); }
+  100% { transform: rotate(0deg) skewY(0deg); }
+}
+
+/* —— Botón flotante: activar / desactivar efectos —— */
+.ambient-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  color: #1B3A2F;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(2, 136, 209, 0.18);
+  transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+}
+.ambient-controls {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ambient-controls .ambient-toggle {
+  position: static;
+}
+.ambient-menu-toggle {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  color: #1B3A2F;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(2, 136, 209, 0.18);
+}
+.ambient-menu-toggle:hover,
+.ambient-menu-toggle:focus-visible {
+  outline: 2px solid #0288D1;
+  outline-offset: 2px;
+}
+.ambient-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  display: grid;
+  gap: 4px;
+  width: min(260px, calc(100vw - 24px));
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: 0 12px 32px rgba(16, 55, 70, 0.2);
+  color: #1B3A2F;
+}
+.ambient-menu[hidden] { display: none; }
+.ambient-menu-title {
+  padding: 8px 10px 5px;
+  color: #3D6B5A;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ambient-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.ambient-choice:hover,
+.ambient-choice[aria-pressed="true"] {
+  background: rgba(129, 212, 250, 0.25);
+}
+.ambient-choice[aria-pressed="true"]::after {
+  content: "✓";
+  margin-left: auto;
+  color: #2E7D32;
+  font-weight: 700;
+}
+.ambient-choice i { width: 18px; text-align: center; }
+[data-theme="dark"] .ambient-menu,
+[data-theme="dark"] .ambient-menu-toggle {
+  border-color: rgba(129, 199, 132, 0.35);
+  background: rgba(18, 40, 35, 0.94);
+  color: #E8F5E9;
+}
+[data-theme="dark"] .ambient-menu-title { color: #A5D6A7; }
+[data-theme="dark"] .ambient-choice:hover,
+[data-theme="dark"] .ambient-choice[aria-pressed="true"] {
+  background: rgba(79, 195, 247, 0.14);
+}
+[data-theme="dark"] .ambient-choice[aria-pressed="true"]::after { color: #81C784; }
+
+.ambient-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(2, 136, 209, 0.25);
+}
+
+.ambient-toggle:active {
+  transform: translateY(0);
+}
+
+.ambient-toggle i {
+  font-size: 15px;
+}
+
+.ambient-toggle.is-off {
+  background: rgba(30, 40, 50, 0.75);
+  color: #E8F5E9;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .ambient-toggle {
+  background: rgba(18, 40, 35, 0.88);
+  color: #E8F5E9;
+  border-color: rgba(129, 199, 132, 0.35);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .ambient-toggle.is-off {
+  background: rgba(10, 18, 28, 0.85);
+  color: #90A4AE;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 700px) {
+  .ambient-controls {
+    /* Encima de la bottom-nav, sin tapar Perfil */
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
+    z-index: 140;
+  }
+  .ambient-controls.no-bottom-nav { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .ambient-controls .ambient-toggle {
+    padding: 11px;
+    border-radius: 50%;
+    z-index: 140; /* por debajo de bottom-nav (150) si se solapan */
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+  .ambient-toggle span { display: none; }
+  .ambient-menu-toggle { width: 44px; height: 44px; }
+}
+
+@media (max-width: 380px) {
+  .ambient-controls {
+    bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+    right: 8px;
+  }
+  .ambient-controls.no-bottom-nav { bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora-backdrop { animation-duration: 100s; }
+  .aurora-backdrop::before { animation-duration: 90s; }
+  .aurora-backdrop::after { animation-duration: 110s; }
+  .swim-fish {
+    animation-name: tailWagReduced;
+    animation-duration: 1.8s;
+  }
+}
+@keyframes tailWagReduced {
+  0%, 50%, 100% { transform: rotate(0deg) skewY(0deg); }
+  25% { transform: rotate(2deg) skewY(0.5deg); }
+  75% { transform: rotate(-2deg) skewY(-0.5deg); }
+}

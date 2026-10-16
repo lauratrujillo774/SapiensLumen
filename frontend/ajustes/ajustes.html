@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Configuración</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/ajustes.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .aj-estado { margin: 0 0 14px; padding: 10px 14px; border-radius: 12px; font-size: 0.88rem; line-height: 1.45; }
+    .aj-estado[hidden] { display: none; }
+    .aj-estado.ok { background: rgba(102, 187, 106, 0.22); border: 1px solid var(--green-soft); }
+    .aj-estado.aviso { background: rgba(255, 167, 38, 0.18); border: 1px solid var(--orange); }
+    .aj-estado.error { background: rgba(229, 57, 53, 0.12); border: 1px solid var(--danger); }
+    .aj-guardado { position: fixed; right: 18px; bottom: 90px; padding: 10px 16px; border-radius: 12px; background: var(--btn); color: #fff; font-weight: 600; font-size: 0.88rem; opacity: 0; transform: translateY(8px); transition: opacity .25s, transform .25s; pointer-events: none; z-index: 450; }
+    .aj-guardado.ver { opacity: 1; transform: none; }
+    .aj-modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, 0.55); z-index: 600; }
+    .aj-modal[hidden] { display: none; }
+    .aj-caja { width: min(440px, 100%); background: var(--surface-solid); color: var(--text); border-radius: 22px; padding: 26px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4); }
+    .aj-caja h2 { margin: 0 0 8px; color: var(--danger); font-size: 1.2rem; }
+    .aj-caja p { color: var(--text-light); font-size: 0.92rem; line-height: 1.5; margin: 0 0 14px; }
+    .aj-caja ul { margin: 0 0 14px 18px; padding: 0; color: var(--text-light); font-size: 0.88rem; line-height: 1.6; }
+    .aj-caja label { display: block; font-size: 0.85rem; margin: 12px 0 6px; font-weight: 600; }
+    .aj-caja input { width: 100%; box-sizing: border-box; padding: 11px 13px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--input-bg); color: var(--text); font: inherit; }
+    .aj-caja input:focus { outline: 3px solid var(--blue-mid); outline-offset: 1px; }
+    .aj-acciones { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+    .aj-acciones button { border: none; border-radius: 12px; padding: 11px 18px; font: inherit; font-weight: 600; cursor: pointer; }
+    .aj-cancelar { background: transparent; color: var(--text); border: 1.5px solid var(--border) !important; }
+    .aj-borrar { background: var(--danger); color: #fff; }
+    .aj-borrar:disabled { opacity: 0.5; cursor: not-allowed; }
+    .aj-error { margin-top: 12px; color: var(--danger); font-size: 0.88rem; font-weight: 600; }
+    .aj-error[hidden] { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+
+    <nav class="side-nav">
+      <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html" class="active"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="page-title">
+        <h1>Configuración</h1>
+        <p>Administra tus avisos, tu privacidad y tu cuenta. Los cambios se guardan solos.</p>
+      </section>
+
+      <section class="settings-block">
+        <h3>Notificaciones</h3>
+        <p class="aj-estado" id="avisoCorreo" hidden></p>
+
+        <div class="toggle-row">
+          <div>
+            <p>Recordatorios de estudio</p>
+            <span>Un aviso si pasan 3 días o más sin jugar</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notif_recordatorios" data-ajuste>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p>Nuevos logros</p>
+            <span>Aviso al desbloquear una insignia</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notif_logros" data-ajuste>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p>Invitaciones de compañeros</p>
+            <span>Cuando alguien te invita o acepta tu invitación</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notif_companeros" data-ajuste>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p>Resumen semanal</p>
+            <span>Un correo cada semana con tu progreso</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notif_semanal" data-ajuste>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <section class="settings-block">
+        <h3>Apariencia</h3>
+
+        <div class="theme-options">
+          <label class="theme-card">
+            <input type="radio" name="theme" value="light" id="theme-light">
+            <i class="fa-solid fa-sun"></i>
+            <span>Claro</span>
+          </label>
+
+          <label class="theme-card">
+            <input type="radio" name="theme" value="dark" id="theme-dark">
+            <i class="fa-solid fa-moon"></i>
+            <span>Oscuro</span>
+          </label>
+
+          <label class="theme-card">
+            <input type="radio" name="theme" value="auto" id="theme-auto">
+            <i class="fa-solid fa-circle-half-stroke"></i>
+            <span>Automático</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="settings-block">
+        <h3>Privacidad</h3>
+
+        <div class="toggle-row">
+          <div>
+            <p>Perfil visible para compañeros</p>
+            <span>Tus compañeros podrán ver tu progreso e insignias. Si lo apagas, solo verán tu nombre.</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="perfil_visible" data-ajuste>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p>Mostrar en el ranking</p>
+            <span>Apareces en la tabla de posiciones de tus compañeros. Si lo apagas, no te verán allí.</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="mostrar_ranking" data-ajuste>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <section class="settings-block danger-zone">
+        <h3>Zona de peligro</h3>
+        <p>Estas acciones son permanentes y no se pueden deshacer.</p>
+
+        <div class="danger-actions">
+          <button class="danger-btn outline" data-logout>Cerrar sesión</button>
+          <button class="danger-btn" id="deleteAccount">Eliminar cuenta</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="aj-guardado" id="ajGuardado" role="status" aria-live="polite">✔ Guardado</div>
+
+  <!-- Confirmar eliminación de la cuenta -->
+  <div class="aj-modal" id="modalEliminar" hidden>
+    <form class="aj-caja" id="formEliminar" role="alertdialog" aria-modal="true" aria-labelledby="tituloEliminar" novalidate>
+      <h2 id="tituloEliminar">¿Eliminar tu cuenta?</h2>
+      <p>Se borrará <strong>para siempre</strong> y no podrás recuperarla:</p>
+      <ul>
+        <li>Tu perfil y tus datos de acceso</li>
+        <li>Tus puntos, nivel, racha, insignias y progreso</li>
+        <li>Tus compañeros y tus notificaciones</li>
+      </ul>
+      <div id="grupoClave">
+        <label for="claveEliminar">Escribe tu contraseña</label>
+        <input type="password" id="claveEliminar" autocomplete="current-password">
+      </div>
+      <label for="textoEliminar">Para confirmar, escribe <b>ELIMINAR</b></label>
+      <input type="text" id="textoEliminar" autocomplete="off" spellcheck="false" placeholder="ELIMINAR">
+      <p class="aj-error" id="errorEliminar" role="alert" hidden></p>
+      <div class="aj-acciones">
+        <button type="button" class="aj-cancelar" id="cancelarEliminar">Cancelar</button>
+        <button type="submit" class="aj-borrar" id="confirmarEliminar" disabled>Eliminar mi cuenta</button>
+      </div>
+    </form>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script src="../js/difficulty.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/shell.js"></script>
+  <script>
+    /* ---- Apariencia (se guarda en este dispositivo) ---- */
+    (function () {
+      const radios = document.querySelectorAll('input[name="theme"]');
+      const guardada = localStorage.getItem('theme-preference') || 'light';
+      const marcado = document.getElementById('theme-' + guardada);
+      if (marcado) marcado.checked = true;
+      radios.forEach((radio) => radio.addEventListener('change', () => {
+        localStorage.setItem('theme-preference', radio.value);
+        sapiensApplyTheme(radio.value);
+      }));
+    })();
+
+    /* ---- Notificaciones y privacidad (se guardan en la base de datos) ---- */
+    (async function () {
+      const campos = Array.from(document.querySelectorAll('[data-ajuste]'));
+      const cartel = document.getElementById('ajGuardado');
+      let temporizador;
+      const avisar = (texto, error) => {
+        cartel.textContent = texto;
+        cartel.style.background = error ? 'var(--danger)' : 'var(--btn)';
+        cartel.classList.add('ver');
+        clearTimeout(temporizador);
+        temporizador = setTimeout(() => cartel.classList.remove('ver'), 1800);
+      };
+
+      campos.forEach((c) => { c.disabled = true; });
+      const r = await SapiensAuth.api('/ajustes');
+      if (!r.ok) { avisar('No se pudieron cargar los ajustes', true); return; }
+      campos.forEach((c) => { c.checked = Boolean(r.data.ajustes[c.id]); c.disabled = false; });
+
+      const aviso = document.getElementById('avisoCorreo');
+      aviso.hidden = false;
+      if (r.data.correoActivo) {
+        aviso.className = 'aj-estado ok';
+        aviso.textContent = '✉️ Además de la campana, te avisaremos a tu correo registrado: ' + ((SapiensAuth.getUser() || {}).email || '');
+      } else {
+        aviso.className = 'aj-estado aviso';
+        aviso.textContent = '✉️ El envío de correos aún no está activado en el servidor. Por ahora los avisos solo aparecen en la campana 🔔.';
+      }
+
+      campos.forEach((c) => c.addEventListener('change', async () => {
+        c.disabled = true;
+        const anterior = !c.checked;
+        const res = await SapiensAuth.api('/ajustes', { method: 'PATCH', body: { [c.id]: c.checked } });
+        c.disabled = false;
+        if (res.ok) avisar('✔ Guardado');
+        else { c.checked = anterior; avisar(res.error || 'No se pudo guardar', true); }
+      }));
+    })();
+
+    /* ---- Eliminar cuenta ---- */
+    (function () {
+      const modal = document.getElementById('modalEliminar');
+      const form = document.getElementById('formEliminar');
+      const clave = document.getElementById('claveEliminar');
+      const texto = document.getElementById('textoEliminar');
+      const boton = document.getElementById('confirmarEliminar');
+      const error = document.getElementById('errorEliminar');
+      const abrirBtn = document.getElementById('deleteAccount');
+      const conGoogle = (SapiensAuth.getUser() || {}).provider === 'google';
+      document.getElementById('grupoClave').hidden = conGoogle;
+
+      const validar = () => { boton.disabled = texto.value.trim().toUpperCase() !== 'ELIMINAR' || (!conGoogle && !clave.value); };
+      const abrir = () => { form.reset(); error.hidden = true; validar(); modal.hidden = false; (conGoogle ? texto : clave).focus(); };
+      const cerrar = () => { modal.hidden = true; abrirBtn.focus(); };
+
+      abrirBtn.addEventListener('click', abrir);
+      document.getElementById('cancelarEliminar').addEventListener('click', cerrar);
+      modal.addEventListener('click', (e) => { if (e.target === modal) cerrar(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) cerrar(); });
+      clave.addEventListener('input', validar);
+      texto.addEventListener('input', validar);
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        error.hidden = true;
+        boton.disabled = true;
+        boton.textContent = 'Eliminando…';
+        const r = await SapiensAuth.deleteAccount({ password: clave.value, confirm: texto.value.trim() });
+        if (!r.ok) {
+          error.textContent = r.error;
+          error.hidden = false;
+          boton.textContent = 'Eliminar mi cuenta';
+          validar();
+          return;
+        }
+        window.location.href = '../inicio/inicio.html';
+      });
+    })();
+
+    document.querySelector('.sidebar-close')?.addEventListener('click', () => {
+      document.querySelector('.sidebar')?.classList.remove('open');
+      document.querySelector('.sidebar-overlay')?.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    });
+  </script>
+</body>
+</html>

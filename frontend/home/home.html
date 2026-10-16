@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Inicio</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/home.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/ajolote.css">
+</head>
+<body>
+
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+
+    <nav class="side-nav">
+      <a href="../home/home.html" class="active"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="welcome">
+        <div>
+          <h1>¡Hola <span data-user-name>Usuario</span>! 👋</h1>
+          <p>¿Qué quieres aprender hoy?</p>
+        </div>
+        <div class="pato-welcome-wrap">
+          <div class="mascot-nametag">Quacky</div>
+          <div class="pato-bubble" id="patoBubble">¡Quack! ¿Listo para aprender?</div>
+          <img src="../img/pato.png" alt="Quacky" class="welcome-pato" id="patoImg">
+        </div>
+      </section>
+
+      <form class="search-box" id="homeSubjectSearchForm" role="search">
+        <label class="visually-hidden" for="homeSubjectSearch">Buscar materias</label>
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input id="homeSubjectSearch" name="buscar" type="search" placeholder="Buscar materias..." autocomplete="off">
+        <button type="submit" aria-label="Buscar materias"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+      </form>
+
+      <section class="home-search-results" id="homeSubjectResults" aria-labelledby="homeSubjectResultsTitle" hidden>
+        <h2 id="homeSubjectResultsTitle">Materias que coinciden</h2>
+        <p class="home-search-status" id="homeSubjectSearchStatus" role="status"></p>
+        <div class="home-subject-grid" id="homeSubjectResultList"></div>
+      </section>
+
+      <section class="progress-card">
+        <div class="progress-header">
+          <h3>Tu progreso general</h3>
+          <span>0%</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:0%"></div></div>
+        <p>Has completado <strong>0 actividades</strong></p>
+      </section>
+
+      <section class="home-feature" aria-labelledby="learning-method-title">
+        <div class="home-section-heading">
+          <span class="home-eyebrow">Nuestra forma de aprender</span>
+          <h2 id="learning-method-title">Aprender se construye paso a paso</h2>
+          <p>En Sapiens Lumen, cada avance cuenta. Explora, comprende y practica a tu ritmo.</p>
+        </div>
+        <div class="learning-method">
+          <article class="method-step">
+            <span class="method-icon"><i class="fa-solid fa-compass" aria-hidden="true"></i></span>
+            <div>
+              <h3>Explora con curiosidad</h3>
+              <p>Elige una pregunta o un tema que te interese y empieza por ahí.</p>
+            </div>
+          </article>
+          <article class="method-step">
+            <span class="method-icon"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></span>
+            <div>
+              <h3>Entiende una idea a la vez</h3>
+              <p>Las explicaciones breves te ayudan a enfocarte sin sentirte abrumado.</p>
+            </div>
+          </article>
+          <article class="method-step">
+            <span class="method-icon"><i class="fa-solid fa-pencil" aria-hidden="true"></i></span>
+            <div>
+              <h3>Ponlo en práctica</h3>
+              <p>Resuelve ejercicios y convierte lo aprendido en conocimiento propio.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="home-feature" aria-labelledby="quacky-tip-title">
+        <div class="quacky-tip">
+          <div class="tip-mascot">
+            <img src="../img/pato.png" alt="">
+          </div>
+          <div class="tip-content">
+            <span class="home-eyebrow">Un consejo de Quacky</span>
+            <h2 id="quacky-tip-title">Hazlo en pequeños bloques</h2>
+            <p>Prueba estudiar durante 20 minutos y luego toma una pausa breve. Una meta pequeña y concreta puede ayudarte a mantener la concentración.</p>
+            <div class="tip-prompt"><i class="fa-solid fa-seedling" aria-hidden="true"></i> ¿Cuál será tu primer paso hoy?</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="achievements">
+        <h2>Tus logros</h2>
+        <div class="achievement-grid">
+          <div class="achievement">🥇<h4>Primera actividad</h4></div>
+          <div class="achievement">🔥<h4>7 días seguidos</h4></div>
+          <div class="achievement">⭐<h4>50 ejercicios</h4></div>
+          <div class="achievement">📚<h4>Nivel 5</h4></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../home/home.html" class="active"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script src="../js/difficulty.js"></script>
+<script src="../js/auth.js"></script>
+  <script src="../js/curriculo.js"></script>
+  <script>
+    document.querySelector('.sidebar-close')?.addEventListener('click', () => {
+      document.querySelector('.sidebar')?.classList.remove('open');
+      document.querySelector('.sidebar-overlay')?.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    });
+
+    /* Progreso y logros reales (desde la base de datos) */
+    (async function() {
+      const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      const pctEl = document.querySelector('.progress-header span');
+      const fillEl = document.querySelector('.progress-fill');
+      const pEl = document.querySelector('.progress-card p');
+      const grid = document.querySelector('.achievement-grid');
+      const titulo = document.querySelector('.achievements h2');
+
+      const [prog, logros] = await Promise.all([SapiensAuth.api('/progreso'), SapiensAuth.api('/logros')]);
+
+      if (prog.ok) {
+        const p = prog.data;
+        if (pctEl) pctEl.textContent = p.porcentajeGeneral + '%';
+        if (fillEl) fillEl.style.width = p.porcentajeGeneral + '%';
+        if (pEl) pEl.innerHTML = p.retosCompletados
+          ? 'Has dominado <strong>' + p.temasDominados + ' de ' + p.temasTotal + ' temas</strong> · ' + p.puntosTotales.toLocaleString('es-CO') + ' puntos · Racha: ' + p.racha + ' días'
+          : 'Aún no has jugado. ¡Elige un tema y gana tus primeros puntos! <a href="../cursos/cursos.html">Ir a Cursos</a>';
+      } else if (pEl) {
+        pEl.textContent = 'No se pudo cargar tu progreso.';
+      }
+
+      if (!logros.ok || !grid) return;
+      const { logros: lista, obtenidas, total } = logros.data;
+      const ganadas = lista.filter((a) => a.obtenida).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+      if (ganadas.length) {
+        if (titulo) titulo.innerHTML = 'Tus logros <small style="font-size:.6em;font-weight:600;color:var(--text-light);">· ' + obtenidas + ' de ' + total + ' · <a href="../logros/logros.html">ver todos</a></small>';
+        grid.innerHTML = ganadas.slice(0, 4).map((a) =>
+          '<div class="achievement" title="' + esc(a.descripcion) + '">' + a.icono + '<h4>' + esc(a.nombre) + '</h4></div>').join('');
+      } else {
+        // Sin logros todavía: se muestran los más cercanos, con su avance
+        if (titulo) titulo.innerHTML = 'Tus próximos logros <small style="font-size:.6em;font-weight:600;"><a href="../logros/logros.html">ver todos</a></small>';
+        const cercanas = lista.filter((a) => !a.obtenida).sort((a, b) => (b.actual / b.meta) - (a.actual / a.meta)).slice(0, 4);
+        grid.innerHTML = cercanas.map((a) =>
+          '<div class="achievement" style="opacity:.8" title="' + esc(a.descripcion) + '"><span style="filter:grayscale(1)">' + a.icono + '</span><h4>' + esc(a.nombre) + '</h4><small>' + a.actual + ' / ' + a.meta + '</small></div>').join('');
+      }
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const form = document.getElementById('homeSubjectSearchForm');
+      const input = document.getElementById('homeSubjectSearch');
+      const results = document.getElementById('homeSubjectResults');
+      const status = document.getElementById('homeSubjectSearchStatus');
+      const resultList = document.getElementById('homeSubjectResultList');
+      if (!form || !input || !results || !status || !resultList || !window.SapiensCurriculo) return;
+
+      let areasPromise;
+      let searchVersion = 0;
+
+      function normalize(value) {
+        return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+      }
+
+      function showStatus(message) {
+        status.textContent = message;
+        status.hidden = !message;
+      }
+
+      async function searchSubjects() {
+        const term = input.value.trim();
+        const version = ++searchVersion;
+        resultList.replaceChildren();
+
+        if (!term) {
+          results.hidden = true;
+          showStatus('');
+          return;
+        }
+
+        results.hidden = false;
+        showStatus('Buscando materias...');
+        const grade = SapiensCurriculo.gradoActual();
+        if (!grade) {
+          showStatus('Selecciona tu grado en tu perfil para consultar las materias disponibles.');
+          return;
+        }
+
+        try {
+          areasPromise = areasPromise || SapiensCurriculo.areas(grade);
+          const response = await areasPromise;
+          if (version !== searchVersion) return;
+          if (!response.ok) {
+            showStatus('No se pudieron cargar las materias. ' + (response.error || 'Inténtalo de nuevo.'));
+            return;
+          }
+
+          const query = normalize(term);
+          const matches = response.data.areas.filter(area => {
+            const subject = SapiensCurriculo.visual(area.clave, area.nombre);
+            return normalize([subject.nombre, area.nombre, subject.desc, area.clave].join(' ')).includes(query);
+          });
+
+          if (!matches.length) {
+            showStatus('No encontramos materias que coincidan con «' + term + '». Prueba con otro nombre.');
+            return;
+          }
+
+          showStatus(matches.length === 1 ? 'Encontramos 1 materia.' : 'Encontramos ' + matches.length + ' materias.');
+          matches.forEach(area => {
+            const subject = SapiensCurriculo.visual(area.clave, area.nombre);
+            const card = document.createElement('article');
+            card.className = 'home-subject-card';
+            card.innerHTML =
+              '<span class="home-subject-icon" style="--subject-color:' + SapiensCurriculo.esc(subject.color) + '">' +
+                '<i class="fa-solid ' + SapiensCurriculo.esc(subject.icon) + '" aria-hidden="true"></i>' +
+              '</span>' +
+              '<div class="home-subject-info"><h3>' + SapiensCurriculo.esc(subject.nombre) + '</h3>' +
+              '<p>' + SapiensCurriculo.esc(subject.desc) + '</p></div>' +
+              '<a class="home-subject-link" href="../cursos/curso.html?area=' +
+                encodeURIComponent(area.id) + '&grado=' + encodeURIComponent(grade) +
+                '">Ver temas <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>';
+            resultList.appendChild(card);
+          });
+        } catch (error) {
+          if (version !== searchVersion) return;
+          console.error('Error al buscar materias en Inicio:', error);
+          showStatus('Ocurrió un error al buscar materias. Inténtalo de nuevo.');
+          areasPromise = null;
+        }
+      }
+
+      input.addEventListener('input', searchSubjects);
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        searchSubjects();
+      });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const phrases = [
+        '¡Quack! ¿Listo para aprender?',
+        '¡Hoy va a ser un gran día! 🦆',
+        'Elige una materia y ¡vamos!',
+        '¡Tú puedes con todo!',
+        'Cada lección te hace más fuerte',
+        '¡Sigue tu racha!',
+        'Aprender es divertido ✨',
+        '¿Matemáticas o Ciencias hoy?'
+      ];
+      const bubble = document.getElementById('patoBubble');
+      const img = document.getElementById('patoImg');
+      if (!bubble) return;
+      let i = 0;
+      function nextPhrase() {
+        i = (i + 1) % phrases.length;
+        bubble.style.animation = 'none';
+        void bubble.offsetWidth;
+        bubble.textContent = phrases[i];
+        bubble.style.animation = '';
+      }
+      setInterval(nextPhrase, 4500);
+      if (img) {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', nextPhrase);
+      }
+    })();
+  </script>
+  <script src="../js/shell.js"></script>
+</body>
+</html>

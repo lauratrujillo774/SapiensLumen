@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Ejercicio</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/path.css">
+  <link rel="stylesheet" href="../css/ajolote.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="exercise-page">
+
+
+  <!-- TOP BAR -->
+  <div class="exercise-top" id="topBar">
+    <button class="btn-close" id="btnClose" title="Salir"><i class="fa-solid fa-xmark"></i></button>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="hearts-display" id="heartsDisplay">
+      <i class="fa-solid fa-heart"></i>
+      <i class="fa-solid fa-heart"></i>
+      <i class="fa-solid fa-heart"></i>
+    </div>
+  </div>
+
+  <!-- EXERCISE BODY -->
+  <div class="exercise-body" id="exerciseBody">
+    <div class="exercise-with-ajolote">
+      <div id="ajoloteFloat" class="ajolote-beside"></div>
+      <div class="question-content">
+        <div class="question-prompt" id="questionPrompt"></div>
+        <div class="question-hint" id="questionHint"></div>
+        <div id="questionArea"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-screen" id="resultsScreen">
+    <div class="results-icon"><i class="fa-solid fa-trophy"></i></div>
+    <h2 id="resultsTitle">¡Lección completada!</h2>
+    <p id="resultsSubtitle">Has terminado esta lección con éxito</p>
+    <div class="results-stats">
+      <div class="result-stat">
+        <div class="val" id="statXp">0</div>
+        <div class="lbl">XP ganados</div>
+      </div>
+      <div class="result-stat">
+        <div class="val" id="statCorrect">0</div>
+        <div class="lbl">Correctas</div>
+      </div>
+      <div class="result-stat">
+        <div class="val" id="statAccuracy">0%</div>
+        <div class="lbl">Precisión</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="btnFinish" style="width:100%;max-width:280px;">Continuar</button>
+  </div>
+
+  <!-- FEEDBACK BAR -->
+  <div class="feedback-bar" id="feedbackBar">
+    <div class="feedback-content">
+      <div class="feedback-msg" id="feedbackMsg">
+        <i class="fa-solid fa-check-circle"></i>
+        <span>¡Correcto!</span>
+      </div>
+      <button class="btn-continue" id="btnContinue">Continuar</button>
+    </div>
+  </div>
+
+  <!-- CHECK BUTTON (when answer selected) -->
+  <div class="feedback-bar" id="checkBar">
+    <div class="feedback-content">
+      <div></div>
+      <button class="btn-check" id="btnCheck" disabled>Comprobar</button>
+    </div>
+  </div>
+
+  <script src="../js/lessons-data.js"></script>
+  <script src="../js/difficulty.js"></script>
+  <script src="../js/progress.js"></script>
+  <script src="../js/companions.js"></script>
+  <script src="../js/ajolote.js"></script>
+  <script>
+    // ===== STATE =====
+    const params = new URLSearchParams(window.location.search);
+    const subjectKey = params.get('s') || 'math';
+    const lessonId = params.get('l') || 'm1-1';
+    const returnUrl = params.get('r') || (subjectKey + '.html');
+
+    const data = (window.SapiensDifficulty && SapiensDifficulty.getLessonForStudent)
+      ? SapiensDifficulty.getLessonForStudent(subjectKey, lessonId)
+      : getLesson(subjectKey, lessonId);
+    if (!data) {
+      document.getElementById('exerciseBody').innerHTML = '<p style="text-align:center;padding:60px;">Lección no encontrada.</p>';
+      throw new Error('Lesson not found');
+    }
+
+    const { subject, lesson } = data;
+    const exercises = lesson.exercises;
+    const studentGrade = (data.grade || (window.SapiensDifficulty && SapiensDifficulty.getStudentGrade()) || 6);
+    let current = 0;
+    let hearts = 3;
+    let correctCount = 0;
+    let selectedAnswer = null;
+    let matchSelected = null;
+    let matchPairs = {};
+    let fillAnswers = [];
+    let orderItems = [];
+    let answered = false;
+
+    // ===== UI REFS =====
+    const progressFill = document.getElementById('progressFill');
+    const heartsDisplay = document.getElementById('heartsDisplay');
+    const questionPrompt = document.getElementById('questionPrompt');
+    const questionHint = document.getElementById('questionHint');
+    const questionArea = document.getElementById('questionArea');
+    const feedbackBar = document.getElementById('feedbackBar');
+    const feedbackMsg = document.getElementById('feedbackMsg');
+    const btnContinue = document.getElementById('btnContinue');
+    const checkBar = document.getElementById('checkBar');
+    const btnCheck = document.getElementById('btnCheck');
+    const resultsScreen = document.getElementById('resultsScreen');
+    const exerciseBody = document.getElementById('exerciseBody');
+    const topBar = document.getElementById('topBar');
+
+    // ===== HELPERS =====
+    function updateProgress() {
+      const pct = (current / exercises.length) * 100;
+      progressFill.style.width = pct + '%';
+    }
+
+    function updateHearts() {
+      heartsDisplay.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const icon = document.createElement('i');
+        icon.className = i < hearts ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+        icon.style.opacity = i < hearts ? '1' : '0.35';
+        heartsDisplay.appendChild(icon);
+      }
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function showFeedback(isCorrect, msg) {
+      feedbackBar.className = 'feedback-bar show ' + (isCorrect ? 'correct' : 'wrong');
+      feedbackMsg.innerHTML = isCorrect
+        ? '<i class="fa-solid fa-check-circle"></i><span>' + (msg || '¡Correcto!') + '</span>'
+        : '<i class="fa-solid fa-xmark-circle"></i><span>' + (msg || 'Incorrecto') + '</span>';
+      checkBar.style.display = 'none';
+    }
+
+    function hideFeedback() {
+      feedbackBar.classList.remove('show');
+      checkBar.style.display = '';
+    }
+
+    // ===== RENDER EXERCISES =====
+    function renderExercise() {
+      if (current >= exercises.length) {
+        showResults();
+        return;
+      }
+
+      answered = false;
+      selectedAnswer = null;
+      matchSelected = null;
+      matchPairs = {};
+      fillAnswers = [];
+      hideFeedback();
+      btnCheck.disabled = true;
+      updateProgress();
+
+      const ex = exercises[current];
+      questionArea.innerHTML = '';
+      questionHint.textContent = '';
+
+      if (ex.type === 'choice') {
+        questionPrompt.textContent = ex.q;
+        const opts = document.createElement('div');
+        opts.className = 'options';
+        const letters = ['A', 'B', 'C', 'D'];
+        ex.options.forEach((opt, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.innerHTML = '<span class="opt-letter">' + letters[i] + '</span><span>' + opt + '</span>';
+          btn.onclick = () => {
+            if (answered) return;
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedAnswer = i;
+            btnCheck.disabled = false;
+          };
+          opts.appendChild(btn);
+        });
+        questionArea.appendChild(opts);
+
+      } else if (ex.type === 'truefalse') {
+        questionPrompt.textContent = ex.q;
+        const wrap = document.createElement('div');
+        wrap.className = 'tf-options';
+        ['true', 'false'].forEach(val => {
+          const btn = document.createElement('button');
+          btn.className = 'tf-btn ' + val;
+          btn.innerHTML = val === 'true'
+            ? '<i class="fa-solid fa-check"></i><span>Verdadero</span>'
+            : '<i class="fa-solid fa-xmark"></i><span>Falso</span>';
+          btn.onclick = () => {
+            if (answered) return;
+            document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedAnswer = val === 'true';
+            btnCheck.disabled = false;
+          };
+          wrap.appendChild(btn);
+        });
+        questionArea.appendChild(wrap);
+
+      } else if (ex.type === 'match') {
+        questionPrompt.textContent = 'Empareja los conceptos';
+        questionHint.textContent = 'Toca un elemento de cada columna para unirlos';
+        const pairs = shuffle(ex.pairs);
+        const left = pairs.map(p => p[0]);
+        const right = shuffle(pairs.map(p => p[1]));
+        const grid = document.createElement('div');
+        grid.className = 'match-grid';
+
+        const leftCol = document.createElement('div');
+        leftCol.style.display = 'flex';
+        leftCol.style.flexDirection = 'column';
+        leftCol.style.gap = '10px';
+        left.forEach((item, i) => {
+          const el = document.createElement('div');
+          el.className = 'match-item';
+          el.textContent = item;
+          el.dataset.side = 'left';
+          el.dataset.val = item;
+          el.onclick = () => handleMatchClick(el, pairs);
+          leftCol.appendChild(el);
+        });
+
+        const rightCol = document.createElement('div');
+        rightCol.style.display = 'flex';
+        rightCol.style.flexDirection = 'column';
+        rightCol.style.gap = '10px';
+        right.forEach(item => {
+          const el = document.createElement('div');
+          el.className = 'match-item';
+          el.textContent = item;
+          el.dataset.side = 'right';
+          el.dataset.val = item;
+          el.onclick = () => handleMatchClick(el, pairs);
+          rightCol.appendChild(el);
+        });
+
+        grid.appendChild(leftCol);
+        grid.appendChild(rightCol);
+        questionArea.appendChild(grid);
+        // Match auto-checks when all paired
+
+      } else if (ex.type === 'fill') {
+        questionPrompt.textContent = 'Completa el espacio en blanco';
+        const area = document.createElement('div');
+        area.className = 'fill-area';
+        let html = ex.q;
+        html = html.replace('___', '<span class="fill-blank" id="blank0">?</span>');
+        area.innerHTML = html;
+        questionArea.appendChild(area);
+
+        const chips = document.createElement('div');
+        chips.className = 'fill-options';
+        shuffle(ex.options).forEach(opt => {
+          const chip = document.createElement('button');
+          chip.className = 'fill-chip';
+          chip.textContent = opt;
+          chip.onclick = () => {
+            if (answered) return;
+            document.getElementById('blank0').textContent = opt;
+            selectedAnswer = opt;
+            document.querySelectorAll('.fill-chip').forEach(c => c.classList.remove('used'));
+            chip.classList.add('used');
+            btnCheck.disabled = false;
+          };
+          chips.appendChild(chip);
+        });
+        questionArea.appendChild(chips);
+
+      } else if (ex.type === 'order') {
+        questionPrompt.textContent = 'Ordena los pasos correctamente';
+        questionHint.textContent = 'Arrastra o usa los botones para reordenar';
+        orderItems = shuffle(ex.items.map((item, i) => ({ text: item, originalIndex: i })));
+        // For simplicity, show as clickable list that cycles order
+        renderOrderList(ex);
+      }
+    }
+
+    function handleMatchClick(el, pairs) {
+      if (answered || el.classList.contains('matched')) return;
+
+      if (!matchSelected) {
+        document.querySelectorAll('.match-item.selected').forEach(e => e.classList.remove('selected'));
+        el.classList.add('selected');
+        matchSelected = el;
+        return;
+      }
+
+      if (matchSelected === el) {
+        el.classList.remove('selected');
+        matchSelected = null;
+        return;
+      }
+
+      if (matchSelected.dataset.side === el.dataset.side) {
+        matchSelected.classList.remove('selected');
+        el.classList.add('selected');
+        matchSelected = el;
+        return;
+      }
+
+      // Different sides – check pair
+      const leftVal = matchSelected.dataset.side === 'left' ? matchSelected.dataset.val : el.dataset.val;
+      const rightVal = matchSelected.dataset.side === 'right' ? matchSelected.dataset.val : el.dataset.val;
+      const isCorrectPair = pairs.some(p => p[0] === leftVal && p[1] === rightVal);
+
+      if (isCorrectPair) {
+        matchSelected.classList.add('matched');
+        el.classList.add('matched');
+        matchSelected.classList.remove('selected');
+        matchSelected = null;
+        // Check if all matched
+        if (document.querySelectorAll('.match-item.matched').length === pairs.length * 2) {
+          answered = true;
+          correctCount++;
+          showFeedback(true);
+          if (window.SapiensAjolote) SapiensAjolote.reactCorrect();
+        }
+      } else {
+        matchSelected.classList.add('wrong-flash');
+        el.classList.add('wrong-flash');
+        setTimeout(() => {
+          matchSelected.classList.remove('selected', 'wrong-flash');
+          el.classList.remove('wrong-flash');
+          matchSelected = null;
+        }, 500);
+      }
+    }
+
+    function renderOrderList(ex) {
+      const list = document.createElement('div');
+      list.className = 'order-list';
+      list.id = 'orderList';
+      orderItems.forEach((item, idx) => {
+        const el = document.createElement('div');
+        el.className = 'order-item';
+        el.innerHTML = '<span class="order-num">' + (idx + 1) + '</span><span>' + item.text + '</span>';
+        el.draggable = true;
+        el.dataset.idx = idx;
+
+        el.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', idx);
+          el.classList.add('dragging');
+        });
+        el.addEventListener('dragend', () => el.classList.remove('dragging'));
+        el.addEventListener('dragover', e => e.preventDefault());
+        el.addEventListener('drop', e => {
+          e.preventDefault();
+          const from = parseInt(e.dataTransfer.getData('text/plain'));
+          const to = idx;
+          if (from === to) return;
+          const moved = orderItems.splice(from, 1)[0];
+          orderItems.splice(to, 0, moved);
+          renderOrderList(ex);
+          btnCheck.disabled = false;
+        });
+        list.appendChild(el);
+      });
+      questionArea.innerHTML = '';
+      questionArea.appendChild(list);
+      // Also add up/down buttons for mobile
+      btnCheck.disabled = false;
+      selectedAnswer = 'order';
+    }
+
+    // ===== CHECK ANSWER =====
+    function checkAnswer() {
+      if (answered) return;
+      const ex = exercises[current];
+      let isCorrect = false;
+      let feedbackExtra = '';
+
+      if (ex.type === 'choice') {
+        isCorrect = selectedAnswer === ex.answer;
+        if (!isCorrect) {
+          document.querySelectorAll('.option-btn').forEach((b, i) => {
+            b.classList.add('disabled');
+            if (i === ex.answer) b.classList.add('correct');
+            if (i === selectedAnswer) b.classList.add('wrong');
+          });
+          feedbackExtra = 'La respuesta correcta era: ' + ex.options[ex.answer];
+        } else {
+          document.querySelectorAll('.option-btn').forEach((b, i) => {
+            b.classList.add('disabled');
+            if (i === ex.answer) b.classList.add('correct');
+          });
+        }
+      } else if (ex.type === 'truefalse') {
+        isCorrect = selectedAnswer === ex.answer;
+        document.querySelectorAll('.tf-btn').forEach(b => {
+          b.style.pointerEvents = 'none';
+          if ((b.classList.contains('true') && ex.answer) || (b.classList.contains('false') && !ex.answer)) {
+            b.classList.add('correct');
+          }
+          if (b.classList.contains('selected') && !isCorrect) b.classList.add('wrong');
+        });
+      } else if (ex.type === 'fill') {
+        isCorrect = selectedAnswer === ex.blanks[0];
+        if (!isCorrect) feedbackExtra = 'La respuesta correcta era: ' + ex.blanks[0];
+      } else if (ex.type === 'order') {
+        isCorrect = orderItems.every((item, i) => item.originalIndex === ex.correct[i]);
+        if (!isCorrect) {
+          feedbackExtra = 'El orden correcto es: ' + ex.correct.map(i => ex.items[i]).join(' → ');
+        }
+      } else if (ex.type === 'match') {
+        // Already handled in click
+        return;
+      }
+
+      answered = true;
+      if (isCorrect) {
+        correctCount++;
+        showFeedback(true);
+        if (window.SapiensAjolote) SapiensAjolote.reactCorrect();
+      } else {
+        hearts--;
+        updateHearts();
+        // Guardar pregunta fallada para el tutor
+        try {
+          const wrongItem = { q: ex.q || '', correct: null };
+          if (ex.type === 'choice' && ex.options) wrongItem.correct = ex.options[ex.answer];
+          else if (ex.type === 'truefalse') wrongItem.correct = ex.answer ? 'Verdadero' : 'Falso';
+          else if (ex.type === 'fill' && ex.blanks) wrongItem.correct = ex.blanks[0];
+          window.__wrongAnswers = window.__wrongAnswers || [];
+          window.__wrongAnswers.push(wrongItem);
+        } catch (_) {}
+        showFeedback(false, feedbackExtra || 'Incorrecto');
+        if (window.SapiensAjolote) SapiensAjolote.reactWrong();
+        if (hearts <= 0) {
+          // Sin vidas → Tutor IA explica el tema
+          setTimeout(function () {
+            if (window.SapiensAjolote) SapiensAjolote.reactGameOver();
+            try {
+              sessionStorage.setItem('tutor_s', subjectKey);
+              sessionStorage.setItem('tutor_l', lessonId);
+              sessionStorage.setItem('tutor_r', returnUrl);
+              sessionStorage.setItem('tutor_title', lesson.title || '');
+              sessionStorage.setItem('tutor_unit', (data.unit && data.unit.title) || '');
+              sessionStorage.setItem('tutor_wrong', JSON.stringify(window.__wrongAnswers || []));
+            } catch (_) {}
+            const url = '../tutor-ia/tutor-ia.html?s=' + encodeURIComponent(subjectKey) +
+              '&l=' + encodeURIComponent(lessonId) +
+              '&r=' + encodeURIComponent(returnUrl);
+            window.location.href = url;
+          }, 1400);
+        }
+      }
+    }
+
+    function nextQuestion() {
+      current++;
+      hideFeedback();
+      if (current >= exercises.length) {
+        showResults();
+      } else {
+        renderExercise();
+      }
+    }
+
+    function showResults() {
+      exerciseBody.style.display = 'none';
+      topBar.style.display = 'none';
+      checkBar.style.display = 'none';
+      feedbackBar.classList.remove('show');
+      resultsScreen.classList.add('show');
+
+      const accuracy = Math.round((correctCount / exercises.length) * 100);
+      const stars = accuracy >= 90 ? 3 : accuracy >= 60 ? 2 : 1;
+      const xpEarned = Math.round(lesson.xp * (accuracy / 100));
+      // Save progress
+      const key = 'progress_' + subjectKey + '_' + lessonId;
+      const prev = (() => { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } })();
+      // Only add XP if first time or improved
+      if (!prev || !prev.done) {
+        let totalXp = parseInt(localStorage.getItem('totalXp') || '0');
+        totalXp += xpEarned;
+        localStorage.setItem('totalXp', totalXp);
+      }
+      localStorage.setItem(key, JSON.stringify({ stars, xp: xpEarned, done: true }));
+      if (window.SapiensProgress) {
+        SapiensProgress.updateStreak();
+        SapiensProgress.onLessonComplete(subjectKey, lessonId, stars, xpEarned);
+      }
+      // Guardar en Supabase si hay sesión (pendiente)
+
+      document.getElementById('statXp').textContent = '+' + xpEarned;
+      document.getElementById('statCorrect').textContent = correctCount + '/' + exercises.length;
+      document.getElementById('statAccuracy').textContent = accuracy + '%';
+
+      if (accuracy === 100) {
+        document.getElementById('resultsTitle').textContent = '¡Perfecto!';
+        document.getElementById('resultsSubtitle').textContent = '¡Respondiste todo correctamente!';
+      } else if (accuracy >= 70) {
+        document.getElementById('resultsTitle').textContent = '¡Muy bien!';
+      } else {
+        document.getElementById('resultsTitle').textContent = '¡Sigue practicando!';
+        document.getElementById('resultsSubtitle').textContent = 'Puedes repetir la lección cuando quieras';
+      }
+    }
+
+    // ===== EVENTS =====
+    btnCheck.addEventListener('click', checkAnswer);
+    btnContinue.addEventListener('click', nextQuestion);
+    document.getElementById('btnClose').addEventListener('click', () => {
+      try {
+        if (confirm('¿Seguro que quieres salir? Perderás el progreso de esta lección.')) {
+          window.location.href = returnUrl;
+        }
+      } catch (e) {
+        // Si confirm está bloqueado, salir de todos modos
+        window.location.href = returnUrl;
+      }
+    });
+    document.getElementById('btnFinish').addEventListener('click', () => {
+      window.location.href = returnUrl;
+    });
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        if (feedbackBar.classList.contains('show')) nextQuestion();
+        else if (!btnCheck.disabled) checkAnswer();
+      }
+    });
+
+    // INIT
+    if (window.SapiensAjolote) {
+      SapiensAjolote.mount('#ajoloteFloat', { mood: 'wave', phrase: '¡Vamos!' });
+      setTimeout(function () {
+        if (SapiensAjolote._el) SapiensAjolote.setMood('idle', { autoPhrase: true });
+      }, 2000);
+    }
+    window.__wrongAnswers = [];
+    updateHearts();
+    if (lesson.gradeLabel || studentGrade) {
+      const badge = document.createElement('div');
+      badge.className = 'grade-badge-ex';
+      const band = lesson.gradeBand || '';
+      const bandLabel = band === 'basic' ? 'Básico' : band === 'intermediate' ? 'Intermedio' : band === 'advanced' ? 'Avanzado' : '';
+      badge.innerHTML = '<i class="fa-solid fa-graduation-cap"></i> Grado ' + (lesson.gradeLabel || (studentGrade + '°')) + (bandLabel ? ' · ' + bandLabel : '');
+      const body = document.getElementById('exerciseBody');
+      if (body) body.insertBefore(badge, body.firstChild);
+    }
+    renderExercise();
+  </script>
+</body>
+</html>

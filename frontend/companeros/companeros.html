@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Compañeros</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/logros.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/companeros.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+    <nav class="side-nav">
+      <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-title">
+        <h1>Compañeros 🤝</h1>
+        <p>Estudia con otras personas: ve su progreso, sus insignias y compite en el ranking</p>
+      </section>
+
+      <!-- Invitación recibida por enlace del correo -->
+      <section class="cmp-block" id="bloqueInvitacionCodigo" hidden>
+        <h2><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Tienes una invitación</h2>
+        <div class="cmp-invitacion" id="invitacionCodigo"></div>
+      </section>
+
+      <section class="cmp-grid">
+        <article class="cmp-card">
+          <h2><i class="fa-solid fa-user-plus" aria-hidden="true"></i> Invitar a un compañero</h2>
+          <p>Escribe el correo de alguien que ya tenga cuenta en Sapiens Lumen. Le llegará una invitación a su campana y a su correo.</p>
+          <form class="cmp-form" id="formBuscar" novalidate>
+            <label class="visually-hidden" for="correoBuscar" style="position:absolute;left:-9999px;">Correo de tu compañero</label>
+            <input type="email" id="correoBuscar" placeholder="correo@ejemplo.com" autocomplete="off" maxlength="150" required>
+            <button type="submit" class="cmp-btn" id="btnBuscar"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Buscar</button>
+          </form>
+          <div class="cmp-resultado" id="resultadoBusqueda" hidden></div>
+          <p class="cmp-msg" id="msgBuscar" role="status" aria-live="polite" hidden></p>
+        </article>
+
+        <article class="cmp-card">
+          <h2><i class="fa-solid fa-key" aria-hidden="true"></i> Tengo un código</h2>
+          <p>Si te llegó una invitación por correo, escribe aquí el código de 8 letras y números.</p>
+          <form class="cmp-form" id="formCodigo" novalidate>
+            <label class="visually-hidden" for="codigoInput" style="position:absolute;left:-9999px;">Código de invitación</label>
+            <input type="text" id="codigoInput" class="codigo" placeholder="ABCD2345" maxlength="8" autocomplete="off" spellcheck="false" required>
+            <button type="submit" class="cmp-btn" id="btnCodigo">Aceptar</button>
+          </form>
+          <p class="cmp-msg" id="msgCodigo" role="status" aria-live="polite" hidden></p>
+        </article>
+      </section>
+
+      <section class="cmp-block" id="bloqueRecibidas" hidden>
+        <h2><i class="fa-solid fa-inbox" aria-hidden="true"></i> Invitaciones recibidas</h2>
+        <ul class="cmp-lista" id="listaRecibidas"></ul>
+      </section>
+
+      <section class="cmp-block" id="bloqueEnviadas" hidden>
+        <h2><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Invitaciones enviadas</h2>
+        <p class="cmp-sub">Esperando respuesta.</p>
+        <ul class="cmp-lista" id="listaEnviadas"></ul>
+      </section>
+
+      <div class="cmp-tabs" role="tablist" aria-label="Compañeros">
+        <button class="cmp-tab" role="tab" id="tabRanking" aria-selected="true" aria-controls="panelRanking">🏆 Ranking</button>
+        <button class="cmp-tab" role="tab" id="tabCompaneros" aria-selected="false" aria-controls="panelCompaneros">👥 Mis compañeros <span id="cuentaCompaneros"></span></button>
+      </div>
+
+      <section class="cmp-block cmp-panel" id="panelRanking" role="tabpanel" aria-labelledby="tabRanking">
+        <h2>Ranking entre compañeros</h2>
+        <p class="cmp-sub">Se ordena por puntos. Cada persona decide en Ajustes si quiere aparecer.</p>
+        <div id="rankingCont"><p class="cmp-vacio">Cargando…</p></div>
+      </section>
+
+      <section class="cmp-block cmp-panel" id="panelCompaneros" role="tabpanel" aria-labelledby="tabCompaneros" hidden>
+        <h2>Mis compañeros</h2>
+        <div id="companerosCont"><p class="cmp-vacio">Cargando…</p></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Progreso de un compañero -->
+  <div class="cmp-modal" id="modalProgreso" hidden>
+    <div class="cmp-modal-caja" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+      <div class="cmp-modal-cab">
+        <div class="cmp-persona" id="modalPersona"></div>
+        <button class="cmp-cerrar" id="cerrarModal" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="modalContenido"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script src="../js/difficulty.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/curriculo.js"></script>
+  <script src="../js/shell.js"></script>
+  <script src="../js/companeros.js"></script>
+</body>
+</html>

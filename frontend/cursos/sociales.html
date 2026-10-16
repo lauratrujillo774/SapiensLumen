@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Ciencias Sociales</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/path.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/ajolote.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+    <nav class="side-nav">
+      <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html" class="active"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="path-header">
+      <div class="path-title">
+        <div class="path-icon" style="background:#29B6F6;"><i class="fa-solid fa-earth-americas"></i></div>
+        <div>
+          <h1>Ciencias Sociales</h1>
+          <p>Historia, geografía y cultura general</p>
+        </div>
+      </div>
+      <div class="path-stats">
+        <div class="stat-pill xp"><i class="fa-solid fa-bolt"></i> <span id="xpVal">0</span> XP</div>
+        <div class="stat-pill hearts"><i class="fa-solid fa-heart"></i> 3</div>
+        <div class="stat-pill streak"><i class="fa-solid fa-fire"></i> <span id="streakVal">0</span></div>
+      </div>
+    </div>
+
+    <div class="path-ajolote-row">
+      <div id="ajolotePath"></div>
+    </div>
+
+    <div class="unit-section" id="pathContainer"></div>
+  </div>
+
+  <!-- Start modal -->
+  <div class="start-overlay" id="startOverlay">
+    <div class="start-card">
+      <div class="start-icon" id="startIcon"><i class="fa-solid fa-play"></i></div>
+      <h2 id="startTitle">Lección</h2>
+      <p id="startDesc">¿Listo para empezar?</p>
+      <div class="start-actions">
+        <button class="btn-primary" id="btnStart">¡Empezar!</button>
+        <button class="btn-secondary" id="btnCancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/lessons-data.js"></script>
+  <script src="../js/progress.js"></script>
+  <script>
+    const SUBJECT_KEY = 'social';
+    const subject = LESSONS[SUBJECT_KEY];
+    const container = document.getElementById('pathContainer');
+    let selectedLessonId = null;
+
+    // Load XP & streak
+    if (window.SapiensProgress) {
+      const st = SapiensProgress.getStats();
+      document.getElementById('xpVal').textContent = st.totalXp;
+      document.getElementById('streakVal').textContent = st.streak;
+    } else {
+      document.getElementById('xpVal').textContent = localStorage.getItem('totalXp') || '0';
+      document.getElementById('streakVal').textContent = localStorage.getItem('streak') || '0';
+    }
+
+    function isDone(lessonId) {
+      try {
+        const p = JSON.parse(localStorage.getItem('progress_' + SUBJECT_KEY + '_' + lessonId) || 'null');
+        return p && p.done;
+      } catch { return false; }
+    }
+
+    function getStars(lessonId) {
+      try {
+        const p = JSON.parse(localStorage.getItem('progress_' + SUBJECT_KEY + '_' + lessonId) || 'null');
+        return p ? p.stars : 0;
+      } catch { return 0; }
+    }
+
+    // Build path
+    subject.units.forEach((unit, uIdx) => {
+      const banner = document.createElement('div');
+      banner.className = 'unit-banner';
+      banner.style.setProperty('--unit-color', subject.color);
+      banner.innerHTML = `
+        <div class="unit-number">${unit.id}</div>
+        <div class="unit-info">
+          <h3>Unidad ${unit.id}: ${unit.title}</h3>
+          <p>${unit.desc}</p>
+        </div>`;
+      container.appendChild(banner);
+
+      const nodesWrap = document.createElement('div');
+      nodesWrap.className = 'path-nodes';
+      const line = document.createElement('div');
+      line.className = 'path-line';
+      nodesWrap.appendChild(line);
+
+      // Unidad desbloqueada si es la 1 o la anterior está completa
+      let unitUnlocked = (uIdx === 0);
+      if (uIdx > 0) {
+        unitUnlocked = subject.units[uIdx - 1].lessons.every(l => isDone(l.id));
+      }
+
+      unit.lessons.forEach((lesson, lIdx) => {
+        const done = isDone(lesson.id);
+        const stars = getStars(lesson.id);
+        let status = 'locked';
+
+        if (done) {
+          status = 'completed';
+        } else if (unitUnlocked) {
+          // Dentro de la unidad: desbloquea hasta 2 lecciones por delante de la última completada
+          let lastDone = -1;
+          for (let j = 0; j < unit.lessons.length; j++) {
+            if (isDone(unit.lessons[j].id)) lastDone = j;
+          }
+          // Si nada hecho, las primeras 3 están abiertas
+          const openUntil = lastDone < 0 ? 2 : lastDone + 2;
+          if (lIdx <= openUntil) {
+            status = (lIdx === lastDone + 1 || (lastDone < 0 && lIdx === 0)) ? 'current' : 'current';
+          }
+        }
+
+        const node = document.createElement('div');
+        node.className = 'node ' + status;
+        if (lesson.type === 'chest') node.classList.add('chest');
+        if (lesson.type === 'boss') node.classList.add('boss');
+        if (lIdx === Math.floor(unit.lessons.length / 2)) node.classList.add('center');
+
+        let icon = lesson.icon || 'fa-star';
+        if (status === 'locked') icon = 'fa-lock';
+        if (status === 'completed' && lesson.type !== 'chest' && lesson.type !== 'boss') icon = 'fa-check';
+
+        let starsHtml = '';
+        if (done) {
+          starsHtml = '<div class="node-stars">' +
+            [1,2,3].map(s => s <= stars ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>').join('') +
+            '</div>';
+        }
+
+        node.innerHTML = `
+          <div class="node-circle"><i class="fa-solid ${icon}"></i></div>
+          <div class="node-label">${lesson.title}</div>
+          ${starsHtml}`;
+
+        if (status !== 'locked') {
+          node.addEventListener('click', () => openStart(lesson));
+        }
+        nodesWrap.appendChild(node);
+      });
+
+      container.appendChild(nodesWrap);
+    });
+
+    function openStart(lesson) {
+      selectedLessonId = lesson.id;
+      document.getElementById('startTitle').textContent = lesson.title;
+      document.getElementById('startDesc').textContent =
+        (lesson.type === 'boss' ? '¡Desafío final de la unidad! ' : '') +
+        'Ganarás hasta ' + lesson.xp + ' XP. ¿Listo?';
+      const iconEl = document.getElementById('startIcon');
+      iconEl.innerHTML = '<i class="fa-solid ' + (lesson.icon || 'fa-play') + '"></i>';
+      if (lesson.type === 'boss') iconEl.style.background = 'linear-gradient(135deg,#7B1FA2,#E040FB)';
+      else if (lesson.type === 'chest') iconEl.style.background = 'linear-gradient(135deg,#FFB300,#FF8F00)';
+      else iconEl.style.background = subject.color;
+      document.getElementById('startOverlay').classList.add('show');
+    }
+
+    document.getElementById('btnStart').onclick = () => {
+      window.location.href = '../cursos/ejercicio.html?s=' + SUBJECT_KEY + '&l=' + selectedLessonId + '&r=sociales.html';
+    };
+    document.getElementById('btnCancel').onclick = () => {
+      document.getElementById('startOverlay').classList.remove('show');
+    };
+    document.getElementById('startOverlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('startOverlay')) {
+        document.getElementById('startOverlay').classList.remove('show');
+      }
+    });
+
+    // Sidebar toggle
+</script>
+<script src="../js/difficulty.js"></script>
+<script src="../js/auth.js"></script>
+
+  <nav class="bottom-nav">
+    <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html" class="active"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+
+  <script>
+    document.querySelector('.sidebar-close')?.addEventListener('click', () => {
+      document.querySelector('.sidebar')?.classList.remove('open');
+      document.querySelector('.sidebar-overlay')?.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    });
+  </script>
+
+
+  <script src="../js/companions.js"></script>
+  <script src="../js/ajolote.js"></script>
+  <script>
+    if (window.SapiensAjolote) {
+      SapiensAjolote.mount('#ajolotePath', { mood: 'wave', phrase: '¡Conozcamos el mundo!' });
+    }
+  </script>
+  <script src="../js/shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "exportar-bd": "node database/exportar.mjs",
+    "importar-bd": "node database/importar.mjs",
+    "sembrar-curriculo": "node database/sembrar_curriculo.mjs",
+    "generar-contenido": "node database/generar_contenido.mjs",
+    "cargar-contenido": "node database/cargar_contenido.mjs",
+    "probar-ia": "node database/probar_ia.mjs",
+    "revisar-idioma": "node database/revisar_idioma.mjs",
+    "probar-correo": "node database/probar_correo.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.6",
+    "express": "^5.2.1",
+    "express-fileupload": "^1.5.2",
+    "mysql2": "^3.24.5",
+    "nodemailer": "^10.0.16",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

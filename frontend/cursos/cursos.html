@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Cursos</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/cursos.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/ajolote.css">
+</head>
+<body>
+
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+
+    <nav class="side-nav">
+      <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html" class="active"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="page-title page-title-with-ajolote">
+        <div class="page-title-text">
+          <h1>Tus cursos</h1>
+          <p>Explora tus materias y continúa donde lo dejaste</p>
+        </div>
+        <div id="ajoloteCursos"></div>
+      </section>
+
+      <section class="courses-toolbar">
+        <div class="search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Buscar curso...">
+        </div>
+      </section>
+
+      <section class="continue-card" id="continueCard" hidden>
+        <div class="continue-info">
+          <div class="continue-icon"><i class="fa-solid fa-book-open" id="continueIcon"></i></div>
+          <div class="continue-text">
+            <span>Continuar aprendiendo</span>
+            <h3 id="continueTitle">—</h3>
+            <div class="continue-progress">
+              <div class="continue-progress-fill" id="continueFill" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+        <a href="#" id="continueBtn" class="continue-btn" style="text-decoration:none;display:inline-flex;align-items:center;">Continuar</a>
+      </section>
+
+      <div class="grade-line">
+        <h3 class="section-heading" id="gradeHeading">Tus asignaturas</h3>
+        <span class="grade-chip" id="gradeChip" hidden>
+          <i class="fa-solid fa-graduation-cap"></i> <span id="gradeText"></span>
+          <a href="../perfil/Profile.html" data-cambiar-grado>Cambiar grado</a>
+        </span>
+      </div>
+
+      <section class="courses-grid" id="coursesGrid">
+        <p class="courses-msg">Cargando tus asignaturas…</p>
+      </section>
+
+    </main>
+  </div>
+
+
+<script src="../js/difficulty.js"></script>
+<script src="../js/auth.js"></script>
+
+  <nav class="bottom-nav">
+    <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html" class="active"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+
+  <script>
+    document.querySelector('.sidebar-close')?.addEventListener('click', () => {
+      document.querySelector('.sidebar')?.classList.remove('open');
+      document.querySelector('.sidebar-overlay')?.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    });
+  </script>
+
+  <script src="../js/companions.js"></script>
+  <script src="../js/ajolote.js"></script>
+  <script>
+    if (window.SapiensAjolote) {
+      SapiensAjolote.mount('#ajoloteCursos', { mood: 'wave', phrase: '¡Elige un curso!' });
+    }
+  </script>
+<script src="../js/curriculo.js"></script>
+  <script>
+    (async function () {
+      const esc = SapiensCurriculo.esc;
+      const grid = document.getElementById('coursesGrid');
+      const searchInput = document.querySelector('.search-bar input');
+      const searchParams = new URLSearchParams(window.location.search);
+      const initialSearch = searchParams.get('buscar') || '';
+      const grado = SapiensCurriculo.gradoActual();
+
+      function mensaje(html) { grid.innerHTML = '<p class="courses-msg">' + html + '</p>'; }
+      function normalize(value) {
+        return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+      }
+
+      if (!grado) {
+        document.getElementById('gradeHeading').textContent = 'Tus asignaturas';
+        if (searchInput) searchInput.value = initialSearch;
+        return mensaje('Elige tu grado para ver tus asignaturas. <a href="../perfil/Profile.html">Ir a mi perfil</a>');
+      }
+
+      document.getElementById('gradeHeading').textContent = 'Asignaturas de ' + grado + '°';
+      document.getElementById('gradeText').textContent = grado + '° grado';
+      document.getElementById('gradeChip').hidden = false;
+
+      const r = await SapiensCurriculo.areas(grado);
+      if (!r.ok) return mensaje(esc(r.error));
+      const areas = r.data.areas;
+      if (!areas.length) return mensaje('Todavía no hay asignaturas para este grado.');
+      await SapiensCurriculo.cargarHechos();   // el avance mostrado es el de ESTA cuenta
+
+      grid.innerHTML = areas.map(a => {
+        const ui = SapiensCurriculo.visual(a.clave, a.nombre);
+        const hechos = SapiensCurriculo.temasHechosDeArea(a.id);
+        const pct = Math.min(100, Math.round(hechos / a.totalTemas * 100));
+        const href = '../cursos/curso.html?area=' + a.id + '&grado=' + grado;
+        return '<div class="course-card dyn" style="--area:' + ui.color + '" data-nombre="' + esc(ui.nombre.toLowerCase()) + '">' +
+          '<div class="course-top"><div class="course-icon"><i class="fa-solid ' + ui.icon + '"></i></div>' +
+          '<span class="course-level">' + grado + '°</span></div>' +
+          '<h4>' + esc(ui.nombre) + '</h4>' +
+          '<p class="course-desc">' + esc(ui.desc) + '</p>' +
+          '<div class="course-progress-row"><span>Progreso</span><span>' + pct + '%</span></div>' +
+          '<div class="course-progress"><div class="course-progress-fill" style="width:' + pct + '%"></div></div>' +
+          '<div class="course-footer"><span class="course-lessons"><i class="fa-solid fa-book-open"></i> ' + hechos + '/' + a.totalTemas + ' temas</span>' +
+          '<a href="' + href + '" class="course-btn">Continuar</a></div></div>';
+      }).join('');
+
+      const emptyMessage = document.createElement('p');
+      emptyMessage.className = 'courses-msg';
+      emptyMessage.hidden = true;
+      emptyMessage.setAttribute('role', 'status');
+      grid.appendChild(emptyMessage);
+
+      function filterCourses(value) {
+        const term = normalize(value);
+        let visibleCount = 0;
+        grid.querySelectorAll('.course-card').forEach(card => {
+          const matches = normalize(card.dataset.nombre || '').includes(term);
+          card.style.display = matches ? 'flex' : 'none';
+          if (matches) visibleCount++;
+        });
+        emptyMessage.hidden = visibleCount !== 0;
+        emptyMessage.textContent = visibleCount ? '' : `No encontramos materias que coincidan con «${value.trim()}». Prueba con otro nombre.`;
+      }
+
+      if (searchInput) {
+        searchInput.value = initialSearch;
+        searchInput.addEventListener('input', () => filterCourses(searchInput.value));
+        filterCourses(initialSearch);
+      }
+
+      // Continuar aprendiendo: el último curso visitado (si sigue siendo de este grado)
+      const ult = SapiensCurriculo.ultimo();
+      const area = ult && Number(ult.grado) === grado ? areas.find(a => a.id === Number(ult.areaId)) : null;
+      if (area) {
+        const ui = SapiensCurriculo.visual(area.clave, area.nombre);
+        document.getElementById('continueCard').hidden = false;
+        document.getElementById('continueIcon').className = 'fa-solid ' + ui.icon;
+        document.getElementById('continueTitle').textContent = ui.nombre + ' · ' + grado + '°';
+        document.getElementById('continueFill').style.width =
+          Math.min(100, Math.round(SapiensCurriculo.temasHechosDeArea(area.id) / area.totalTemas * 100)) + '%';
+        document.getElementById('continueBtn').href = '../cursos/curso.html?area=' + area.id + '&grado=' + grado;
+      }
+
+    })();
+  </script>
+  <script src="../js/shell.js"></script>
+</body>
+</html>

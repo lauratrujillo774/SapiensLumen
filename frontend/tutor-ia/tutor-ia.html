@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Maestro Cheddar</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/ajolote.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+    :root {
+      --bg-gradient: linear-gradient(180deg, #4FC3F7 0%, #81D4FA 25%, #B3E5FC 50%, #C8E6C9 78%, #A5D6A7 100%);
+      --surface: rgba(255,255,255,0.92);
+      --surface-solid: #fff;
+      --text: #1B3A2F;
+      --text-light: #3D6B5A;
+      --olive: #2E7D32;
+      --green-soft: #66BB6A;
+      --btn: #2E7D32;
+      --btn-hover: #1B5E20;
+      --border: rgba(46,125,50,0.28);
+      --danger: #E53935;
+    }
+    [data-theme="dark"] {
+      --bg-gradient: linear-gradient(180deg, #0A1628 0%, #0D2137 30%, #122A1F 65%, #0F2418 100%);
+      --surface: rgba(18,40,35,0.92);
+      --surface-solid: #16332C;
+      --text: #E8F5E9;
+      --text-light: #A5D6A7;
+      --olive: #81C784;
+      --green-soft: #66BB6A;
+      --btn: #43A047;
+      --btn-hover: #66BB6A;
+      --border: rgba(129,199,132,0.25);
+      --danger: #EF5350;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body {
+      min-height: 100vh;
+      background: var(--bg-gradient) !important;
+      background-attachment: fixed !important;
+      color: var(--text);
+      padding: 20px 16px 40px;
+    }
+    .tutor-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .tutor-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .tutor-header h1 {
+      font-size: 1.5rem;
+      margin-top: 8px;
+    }
+    .tutor-header .meta {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .chat {
+      background: var(--surface);
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      padding: 18px;
+      min-height: 280px;
+      max-height: 52vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 10px 32px rgba(0,0,0,0.08);
+    }
+    .msg {
+      max-width: 92%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      animation: msgIn 0.35s ease;
+    }
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    .msg.foca {
+      align-self: flex-start;
+      background: rgba(129, 199, 132, 0.25);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+    .msg.user {
+      align-self: flex-end;
+      background: var(--btn);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .msg .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      opacity: 0.75;
+      margin-bottom: 4px;
+    }
+    .msg strong { color: inherit; }
+    .msg ul { margin: 8px 0 0 18px; }
+    .msg li { margin-bottom: 4px; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      justify-content: center;
+    }
+    .actions button, .actions a {
+      padding: 13px 22px;
+      border-radius: 14px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .actions button:hover, .actions a:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--olive), var(--green-soft));
+      color: #fff;
+    }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 2px solid var(--border) !important;
+    }
+    .quick-qs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+      justify-content: center;
+    }
+    .quick-qs button {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .quick-qs button:hover {
+      border-color: var(--olive);
+      background: rgba(129,199,132,0.25);
+    }
+    .typing {
+      align-self: flex-start;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+    .typing span {
+      animation: blink 1.2s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="tutor-wrap">
+    <div class="tutor-header">
+      <div id="focaHost"></div>
+      <h1>Maestro Cheddar</h1>
+      <p class="meta" id="topicMeta">Te ayudo con el tema</p>
+    </div>
+
+    <div class="chat" id="chat"></div>
+
+    <div class="quick-qs" id="quickQs">
+      <button type="button" data-q="resume">Explícame el tema</button>
+      <button type="button" data-q="ejemplo">Dame un ejemplo</button>
+      <button type="button" data-q="tips">Consejos para no fallar</button>
+      <button type="button" data-q="reintentar">¿Listo para reintentar?</button>
+    </div>
+
+    <div class="actions">
+      <a class="btn-primary" id="btnRetry" href="#"><i class="fa-solid fa-rotate-right"></i> Reintentar lección</a>
+      <a class="btn-secondary" id="btnBack" href="../home/home.html"><i class="fa-solid fa-house"></i> Ir al inicio</a>
+    </div>
+  </div>
+
+  <script src="../js/lessons-data.js"></script>
+  <script src="../js/difficulty.js"></script>
+  <script src="../js/foca.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const subjectKey = params.get('s') || sessionStorage.getItem('tutor_s') || 'math';
+    const lessonId = params.get('l') || sessionStorage.getItem('tutor_l') || '';
+    const returnUrl = params.get('r') || sessionStorage.getItem('tutor_r') || (subjectKey + '.html');
+    let wrongQs = [];
+    try {
+      wrongQs = JSON.parse(sessionStorage.getItem('tutor_wrong') || '[]');
+    } catch (_) {}
+
+    const SUBJECT_NAMES = {
+      math: 'Matemáticas',
+      science: 'Ciencias',
+      reading: 'Lectura',
+      social: 'Ciencias Sociales',
+      tech: 'Tecnología',
+      english: 'Inglés'
+    };
+
+    let lessonTitle = sessionStorage.getItem('tutor_title') || 'esta lección';
+    let unitTitle = sessionStorage.getItem('tutor_unit') || '';
+    let subjectName = SUBJECT_NAMES[subjectKey] || subjectKey;
+
+    // Enriquecer desde LESSONS si existe
+    if (typeof getLesson === 'function' || typeof LESSONS !== 'undefined') {
+      try {
+        const data = (window.SapiensDifficulty && SapiensDifficulty.getLessonForStudent)
+          ? SapiensDifficulty.getLessonForStudent(subjectKey, lessonId)
+          : (typeof getLesson === 'function' ? getLesson(subjectKey, lessonId) : null);
+        if (data) {
+          lessonTitle = data.lesson.title || lessonTitle;
+          unitTitle = (data.unit && data.unit.title) || unitTitle;
+          subjectName = data.subject.name || subjectName;
+        }
+      } catch (_) {}
+    }
+
+    document.getElementById('topicMeta').textContent =
+      subjectName + (unitTitle ? ' · ' + unitTitle : '') + ' · ' + lessonTitle;
+
+    document.getElementById('btnRetry').href =
+      '../cursos/ejercicio.html?s=' + encodeURIComponent(subjectKey) +
+      '&l=' + encodeURIComponent(lessonId) +
+      '&r=' + encodeURIComponent(returnUrl);
+
+    const returnMap = {
+      math: '../cursos/matematicas.html', science: '../cursos/ciencias.html', reading: '../cursos/lectura.html',
+      social: '../cursos/sociales.html', tech: '../cursos/tecnologia.html', english: '../cursos/ingles.html'
+    };
+    document.getElementById('btnBack').href = returnMap[subjectKey] || returnUrl || '../home/home.html';
+
+    // Maestro Cheddar (Tutor IA)
+    SapiensFoca.mount('#focaHost', { name: 'Maestro Cheddar', hero: true, mood: 'encourage', phrase: '¡No te rindas! Vamos a repasarlo juntos.' });
+
+    const chat = document.getElementById('chat');
+
+    function addMsg(html, who) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + who;
+      if (who === 'foca') {
+        div.innerHTML = '<div class="label">Maestro Cheddar</div>' + html;
+      } else {
+        div.innerHTML = html;
+      }
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function typing(on) {
+      let el = document.getElementById('typingInd');
+      if (on) {
+        if (el) return;
+        el = document.createElement('div');
+        el.id = 'typingInd';
+        el.className = 'typing';
+        el.innerHTML = 'Maestro Cheddar está pensando <span>.</span><span>.</span><span>.</span>';
+        chat.appendChild(el);
+        chat.scrollTop = chat.scrollHeight;
+      } else if (el) el.remove();
+    }
+
+    /* —— “IA” local: explicaciones por materia y tema —— */
+    function buildExplanation(kind) {
+      const topic = lessonTitle.toLowerCase();
+      const subj = subjectKey;
+
+      if (kind === 'reintentar') {
+        return 'Cuando quieras, pulsa <strong>Reintentar lección</strong>. Tendrás otra vez 3 vidas. Yo estaré aquí si necesitas más ayuda. ¡Tú puedes! 🦭';
+      }
+
+      if (kind === 'tips') {
+        const tips = {
+          math: [
+            'Lee el problema completo antes de calcular.',
+            'Identifica la operación: ¿suma, resta, multiplicación o división?',
+            'Estima un resultado aproximado para descartar opciones absurdas.',
+            'Revisa las unidades y el orden de las operaciones.'
+          ],
+          science: [
+            'Relaciona el concepto con algo de tu vida diaria.',
+            'Fíjate en palabras clave: proceso, causa, efecto, ejemplo.',
+            'Descarta opciones que contradigan definiciones básicas.'
+          ],
+          reading: [
+            'Lee el enunciado dos veces.',
+            'Busca la idea principal y los detalles de apoyo.',
+            'No te quedes solo con una palabra: mira el contexto.'
+          ],
+          social: [
+            'Ubica el tema en tiempo y lugar (cuándo y dónde).',
+            'Relaciona causas y consecuencias.',
+            'Recuerda nombres, fechas o procesos clave del tema.'
+          ],
+          tech: [
+            'Piensa en el paso a paso del proceso.',
+            'Relaciona el concepto con herramientas que ya usas.',
+            'Diferencia entre hardware, software y datos cuando aplique.'
+          ],
+          english: [
+            'Identify the tense and the subject.',
+            'Look for false friends and similar options.',
+            'Read the whole sentence before choosing.'
+          ]
+        };
+        const list = tips[subj] || tips.math;
+        return 'Consejos para <strong>' + lessonTitle + '</strong>:<ul>' +
+          list.map(t => '<li>' + t + '</li>').join('') + '</ul>';
+      }
+
+      if (kind === 'ejemplo') {
+        if (wrongQs.length) {
+          const w = wrongQs[0];
+          let html = 'Miremos uno que se te complicó:<br><em>«' + escapeHtml(w.q || 'Pregunta') + '»</em><br><br>';
+          if (w.correct != null) {
+            html += 'La respuesta correcta era: <strong>' + escapeHtml(String(w.correct)) + '</strong>.<br>';
+          }
+          html += explainWhy(w);
+          return html;
+        }
+        return exampleForTopic(subj, topic, lessonTitle);
+      }
+
+      // resume / default
+      return resumeForTopic(subj, topic, lessonTitle, unitTitle, wrongQs);
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function explainWhy(w) {
+      if (!w) return '';
+      const q = (w.q || '').toLowerCase();
+      if (/\+|suma|más/.test(q)) return 'En una <strong>suma</strong> unes dos o más cantidades. Cuenta o usa la tabla mental.';
+      if (/−|resta|menos|quedan/.test(q)) return 'En una <strong>resta</strong> quitas una cantidad de otra. Asegúrate de restar el número correcto.';
+      if (/×|multiplic|producto/.test(q)) return 'La <strong>multiplicación</strong> es una suma repetida. Por ejemplo 3 × 4 = 3+3+3+3.';
+      if (/÷|divid/.test(q)) return 'La <strong>división</strong> reparte en partes iguales o pregunta cuántas veces cabe un número en otro.';
+      if (/%|porcent/.test(q)) return 'Un <strong>porcentaje</strong> es una parte de 100. El 50% es la mitad; el 25% es un cuarto.';
+      if (/fracción|\/\d/.test(q)) return 'Una <strong>fracción</strong> indica partes de un todo: numerador (arriba) y denominador (abajo).';
+      return 'Repasa la definición del concepto y descarta las opciones que no coincidan con ella.';
+    }
+
+    function resumeForTopic(subj, topic, title, unit, wrong) {
+      let intro = 'Se te acabaron las vidas en <strong>' + escapeHtml(title) + '</strong>';
+      if (unit) intro += ' (unidad: ' + escapeHtml(unit) + ')';
+      intro += ' de <strong>' + escapeHtml(SUBJECT_NAMES[subj] || subj) + '</strong>. Tranquilo: fallar es parte de aprender.<br><br>';
+
+      let body = '';
+      if (subj === 'math') {
+        if (/suma/.test(topic)) {
+          body = 'La <strong>suma</strong> combina cantidades. Alinea las unidades y lleva “1” cuando el dígito pase de 9. Practica con números del día a día (precios, puntos).';
+        } else if (/resta/.test(topic)) {
+          body = 'La <strong>resta</strong> calcula la diferencia. Si el dígito de arriba es menor, “prestas” de la columna de la izquierda.';
+        } else if (/multi/.test(topic)) {
+          body = 'La <strong>multiplicación</strong> repite una cantidad. Dominar las tablas (del 1 al 12) te hace más rápido y seguro.';
+        } else if (/frac|decimal/.test(topic)) {
+          body = 'Las <strong>fracciones</strong> representan partes. Con el mismo denominador se suman los numeradores. Un decimal como 0,5 equivale a 1/2.';
+        } else if (/geo|figura|área|perímetro/.test(topic)) {
+          body = 'En <strong>geometría</strong>, el perímetro es el contorno y el área es la superficie. Cuadrado: área = lado × lado; rectángulo: base × altura.';
+        } else if (/algebra|ecuaci|variable/.test(topic)) {
+          body = 'En <strong>álgebra</strong>, una letra representa un número desconocido. Lo que haces a un lado de la ecuación debes hacerlo al otro para despejar.';
+        } else if (/porcent|%/.test(topic)) {
+          body = 'El <strong>porcentaje</strong> es “de cada 100”. Para calcular el p% de N: (p × N) / 100.';
+        } else {
+          body = 'En este tema de matemáticas conviene identificar la operación, estimar el resultado y comprobar sustituyendo.';
+        }
+      } else if (subj === 'science') {
+        body = 'En <strong>ciencias</strong> relacionamos observaciones con conceptos (materia, energía, seres vivos, cuerpo humano). Busca definiciones claras y ejemplos reales.';
+      } else if (subj === 'reading') {
+        body = 'En <strong>lectura</strong> identifica la idea principal, el propósito del autor y el significado de palabras por contexto.';
+      } else if (subj === 'social') {
+        body = 'En <strong>sociales</strong> ubica hechos en el tiempo y el espacio, y relaciona causas con consecuencias históricas o geográficas.';
+      } else if (subj === 'tech') {
+        body = 'En <strong>tecnología</strong> piensa en sistemas (entrada → proceso → salida) y en cómo las herramientas resuelven problemas.';
+      } else if (subj === 'english') {
+        body = 'In <strong>English</strong>, focus on vocabulary in context, basic grammar (verb tenses) and reading the full sentence before answering.';
+      } else {
+        body = 'Repasemos las ideas clave del tema y practiquemos con calma.';
+      }
+
+      if (wrong && wrong.length) {
+        body += '<br><br>Fallaste ' + wrong.length + ' pregunta(s) en este intento. Puedes pedirme un <strong>ejemplo</strong> de las que te costaron.';
+      }
+
+      return intro + body;
+    }
+
+    function exampleForTopic(subj, topic, title) {
+      if (subj === 'math') {
+        if (/suma/.test(topic)) return 'Ejemplo: <strong>27 + 15</strong>. 7+5=12 (escribo 2 y llevo 1). 2+1+1=4. Resultado: <strong>42</strong>.';
+        if (/resta/.test(topic)) return 'Ejemplo: <strong>50 − 18</strong>. 0 no puede restar 8, presto: 10−8=2 y 4−1=3. Resultado: <strong>32</strong>.';
+        if (/multi/.test(topic)) return 'Ejemplo: <strong>6 × 7</strong> = 6+6+6+6+6+6+6 = <strong>42</strong>. También: 6×5=30 y 6×2=12 → 30+12=42.';
+        if (/porcent/.test(topic)) return 'Ejemplo: <strong>20% de 80</strong> = (20×80)/100 = <strong>16</strong>.';
+        if (/frac/.test(topic)) return 'Ejemplo: <strong>1/4 + 1/4 = 2/4 = 1/2</strong>. Mismo denominador: sumas numeradores.';
+        return 'Ejemplo general: lee el enunciado, elige la operación, calcula y comprueba con una de las opciones.';
+      }
+      return 'Un buen ejemplo es tomar una idea del tema <strong>' + escapeHtml(title) + '</strong>, explicarla con tus palabras y luego relacionarla con un caso de la vida real.';
+    }
+
+    function focaReply(kind) {
+      typing(true);
+      SapiensFoca.setMood('think', { phrase: 'Déjame explicarte…' });
+      setTimeout(() => {
+        typing(false);
+        const html = buildExplanation(kind);
+        addMsg(html, 'foca');
+        if (kind === 'reintentar') SapiensFoca.setMood('encourage', { phrase: '¡Vamos otra vez!' });
+        else if (kind === 'ejemplo') SapiensFoca.setMood('happy', { phrase: '¿Se entendió mejor?' });
+        else SapiensFoca.setMood('idle', { phrase: '¿Quieres otro ejemplo?' });
+      }, 700 + Math.random() * 500);
+    }
+
+    // Primer mensaje automático
+    setTimeout(() => {
+      addMsg(buildExplanation('resume'), 'foca');
+      SapiensFoca.setMood('encourage', { phrase: 'Estoy contigo 🧀' });
+    }, 400);
+
+    document.getElementById('quickQs').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-q]');
+      if (!btn) return;
+      const q = btn.dataset.q;
+      const labels = {
+        resume: 'Explícame el tema',
+        ejemplo: 'Dame un ejemplo',
+        tips: 'Consejos para no fallar',
+        reintentar: '¿Listo para reintentar?'
+      };
+      addMsg(labels[q] || q, 'user');
+      focaReply(q);
+    });
+  </script>
+</body>
+</html>

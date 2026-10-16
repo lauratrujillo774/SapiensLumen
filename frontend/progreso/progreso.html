@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Progreso</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/progreso.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .pg-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .pg-icono { width: 44px; height: 44px; border-radius: 14px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .pg-barra { height: 8px; background: var(--green-pale); border-radius: 10px; overflow: hidden; }
+    .pg-barra div { height: 100%; border-radius: 10px; }
+    .pg-ir { background: var(--btn); color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; }
+    .pg-ir:hover { background: var(--btn-hover); }
+    .pg-lista { display: flex; flex-direction: column; gap: 12px; }
+    .pg-vacio { padding: 22px; border-radius: 18px; background: var(--surface); text-align: center; color: var(--text-light); line-height: 1.6; }
+    .pg-bloque { margin-bottom: 38px; }
+    .pg-bloque h2 { margin-bottom: 16px; }
+    .pg-chart { height: 220px !important; }
+    .pg-chart .bar { background: linear-gradient(180deg, var(--cyan), var(--blue-mid)) !important; }
+    .pg-chart .bar-label { font-size: 0.7rem; }
+    .pg-nivel-texto { font-size: 0.9rem; color: var(--text-light); margin-top: 8px; }
+    .pg-estrella { color: var(--orange); }
+    .pg-error { padding: 18px; border-radius: 16px; background: rgba(229, 57, 53, 0.12); border: 1px solid var(--danger); }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+    <nav class="side-nav">
+      <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html" class="active"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-title">
+        <h1>Tu progreso</h1>
+        <p>Así va tu avance en cada materia</p>
+      </section>
+
+      <section class="stats-row">
+        <div class="stat-card">
+          <i class="fa-solid fa-list-check"></i>
+          <div><span id="statGames">–</span><p>Juegos completados</p></div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-fire"></i>
+          <div><span id="statStreak">–</span><p>Días de racha</p></div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-star"></i>
+          <div><span id="statLevel">–</span><p>Nivel actual</p></div>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-bolt"></i>
+          <div><span id="statXp">–</span><p>Puntos totales</p></div>
+        </div>
+      </section>
+
+      <section class="progress-card">
+        <div class="progress-header">
+          <h3 id="overallTitle">Progreso general</h3>
+          <span id="overallPct">0%</span>
+        </div>
+        <div class="progress"><div class="progress-fill" id="overallBar" style="width:0%"></div></div>
+        <p id="overallText">Cargando tu progreso…</p>
+        <p class="pg-nivel-texto" id="levelText"></p>
+      </section>
+
+      <div id="pgContenido"></div>
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../progreso/progreso.html" class="active"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script src="../js/difficulty.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/curriculo.js"></script>
+  <script src="../js/shell.js"></script>
+  <script>
+    (async function () {
+      const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      const $ = (id) => document.getElementById(id);
+      const num = (n) => Number(n).toLocaleString('es-CO');
+
+      const r = await SapiensAuth.api('/progreso');
+      if (!r.ok) {
+        $('overallText').textContent = 'No se pudo cargar tu progreso.';
+        $('pgContenido').innerHTML = '<p class="pg-error">' + esc(r.error) + '</p>';
+        return;
+      }
+      const p = r.data;
+
+      $('statGames').textContent = num(p.retosCompletados);
+      $('statStreak').textContent = p.racha;
+      $('statLevel').textContent = 'Nivel ' + p.nivel.id;
+      $('statXp').textContent = num(p.puntosTotales);
+
+      $('overallTitle').textContent = p.grado ? 'Progreso general · ' + p.grado + '°' : 'Progreso general';
+      $('overallPct').textContent = p.porcentajeGeneral + '%';
+      $('overallBar').style.width = p.porcentajeGeneral + '%';
+      $('overallText').textContent = p.temasTotal
+        ? 'Has dominado ' + p.temasDominados + ' de ' + p.temasTotal + ' temas' + (p.temasJugados ? ' · has jugado ' + p.temasJugados : '') + ' · aciertos: ' + p.porcentajeAciertos + '%'
+        : 'Elige tu grado en el perfil para ver tu avance por temas.';
+      $('levelText').textContent = p.nivel.nombre + (p.nivel.siguiente
+        ? ' · te faltan ' + num(p.nivel.siguiente.puntos - p.puntosTotales) + ' puntos para «' + p.nivel.siguiente.nombre + '»'
+        : ' · ¡has llegado al nivel más alto!');
+
+      // ---- por materia
+      const materias = p.materias.map((m) => {
+        const v = SapiensCurriculo.visual(m.clave, m.nombre);
+        const destino = p.grado ? '../cursos/curso.html?area=' + m.id + '&grado=' + p.grado : '../cursos/cursos.html';
+        return '<div class="pg-card">' +
+          '<div class="pg-icono" style="background:' + esc(v.color) + '"><i class="fa-solid ' + esc(v.icon) + '" aria-hidden="true"></i></div>' +
+          '<div style="flex:1;min-width:150px;"><div style="font-weight:700;margin-bottom:6px;">' + esc(v.nombre) + '</div>' +
+          '<div class="pg-barra" role="img" aria-label="' + m.porcentaje + '% dominado"><div style="width:' + m.porcentaje + '%;background:' + esc(v.color) + '"></div></div></div>' +
+          '<div style="font-weight:600;color:var(--text-light);font-size:0.9rem;">' + m.temasDominados + '/' + m.temasTotal + ' dominados · ' + m.temasJugados + ' jugados</div>' +
+          '<a class="pg-ir" href="' + destino + '">Ir</a></div>';
+      }).join('');
+
+      // ---- temas para reforzar
+      const debiles = p.temasParaReforzar.length
+        ? '<div class="pg-lista">' + p.temasParaReforzar.map((t) =>
+          '<div class="pg-card"><div class="pg-icono" style="background:#EF6C00"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></div>' +
+          '<div style="flex:1;min-width:150px;"><div style="font-weight:700;">' + esc(t.nombre) + '</div><div style="font-size:0.85rem;color:var(--text-light);">' + esc(t.area) + ' · ' + t.grado + '° · dominio ' + t.dominio + '%</div></div>' +
+          '<a class="pg-ir" href="../cursos/tema.html?tema=' + t.id + '">Repasar</a></div>').join('') + '</div>'
+        : '<div class="pg-vacio">¡Genial! No tienes temas débiles por ahora. 🎉</div>';
+
+      // ---- actividad de los últimos 14 días
+      const dias = [];
+      for (let i = 13; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        const clave = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        const a = p.actividad.find((x) => x.dia === clave);
+        dias.push({ etiqueta: d.getDate(), puntos: a ? a.puntos : 0 });
+      }
+      const maximo = Math.max(1, ...dias.map((d) => d.puntos));
+      const hayActividad = dias.some((d) => d.puntos > 0);
+      const actividad = hayActividad
+        ? '<div class="chart pg-chart" role="img" aria-label="Puntos ganados en los últimos 14 días">' + dias.map((d) =>
+          '<div class="bar-col"><span class="bar-value">' + (d.puntos || '') + '</span><div class="bar" style="height:' + Math.max(Math.round((d.puntos / maximo) * 100), 3) + '%"></div><span class="bar-label">' + d.etiqueta + '</span></div>').join('') + '</div>'
+        : '<div class="pg-vacio">Todavía no hay actividad en los últimos 14 días. ¡Juega un tema para empezar! 🎮</div>';
+
+      // ---- últimos juegos
+      const fecha = (f) => new Date(f).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' });
+      const recientes = p.recientes.length
+        ? '<div class="pg-lista">' + p.recientes.map((j) => {
+          const total = j.aciertos + j.errores;
+          const pct = total ? Math.round((j.aciertos / total) * 100) : 0;
+          const estrellas = pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 40 ? 1 : 0;
+          return '<div class="pg-card"><div style="flex:1;min-width:150px;"><div style="font-weight:700;">' + esc(j.tema) + '</div>' +
+            '<div style="font-size:0.85rem;color:var(--text-light);">' + esc(j.area) + ' · ' + fecha(j.fecha) + '</div></div>' +
+            '<div class="pg-estrella" aria-label="' + estrellas + ' de 3 estrellas">' + '★'.repeat(estrellas) + '<span style="opacity:.3">' + '★'.repeat(3 - estrellas) + '</span></div>' +
+            '<div style="font-weight:600;font-size:0.9rem;">' + j.aciertos + '/' + total + ' · +' + j.puntos + ' pts</div>' +
+            '<a class="pg-ir" href="../cursos/juego.html?tema=' + j.idTema + '">Jugar otra vez</a></div>';
+        }).join('') + '</div>'
+        : '<div class="pg-vacio">Aún no has completado ningún juego.<br><a class="pg-ir" style="display:inline-block;margin-top:10px;" href="../cursos/cursos.html">Elegir un tema</a></div>';
+
+      $('pgContenido').innerHTML =
+        '<section class="pg-bloque"><h2>Progreso por materia</h2>' + (materias ? '<div class="pg-lista">' + materias + '</div>' : '<div class="pg-vacio">Elige tu grado en el perfil para ver tus materias.</div>') + '</section>' +
+        '<section class="pg-bloque"><h2>Temas para reforzar</h2>' + debiles + '</section>' +
+        '<section class="pg-bloque"><h2>Puntos de los últimos 14 días</h2>' + actividad + '</section>' +
+        '<section class="pg-bloque"><h2>Tus últimos juegos</h2>' + recientes + '</section>';
+    })();
+  </script>
+</body>
+</html>

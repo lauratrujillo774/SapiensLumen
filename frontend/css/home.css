@@ -1,0 +1,751 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  /* === MODO CLARO: Pradera soleada === */
+  --bg: #87CEEB;
+  --bg-gradient: linear-gradient(180deg, #4FC3F7 0%, #81D4FA 25%, #B3E5FC 50%, #C8E6C9 78%, #A5D6A7 100%);
+  --surface: rgba(255, 255, 255, 0.88);
+  --surface-solid: #FFFFFF;
+  --text: #1B3A2F;
+  --text-light: #3D6B5A;
+
+  --blue: #0288D1;
+  --blue-mid: #29B6F6;
+  --blue-soft: #81D4FA;
+  --blue-light: #E1F5FE;
+  --blue-pale: #4FC3F7;
+
+  --olive: #2E7D32;
+  --green-soft: #66BB6A;
+  --green-pale: #C8E6C9;
+  --green-dark: #1B5E20;
+  --green-glow: #81C784;
+
+  --orange: #FFA726;
+  --cyan: #26C6DA;
+  --lime: #9CCC65;
+  --lime-light: #C5E1A5;
+  --yellow: #FFEE58;
+  --gray-blue: #78909C;
+  --bubble: rgba(255, 255, 255, 0.85);
+  --bubble-border: rgba(255, 255, 255, 0.95);
+  --glow: rgba(46, 125, 50, 0.2);
+
+  --btn: #2E7D32;
+  --btn-hover: #1B5E20;
+  --border: rgba(46, 125, 50, 0.28);
+  --chip-bg: rgba(200, 230, 201, 0.85);
+  --input-bg: rgba(255, 255, 255, 0.92);
+  --shadow: 0 10px 32px rgba(2, 136, 209, 0.12);
+  --danger: #E53935;
+
+  --sidebar-bg: rgba(255, 255, 255, 0.92);
+  --sidebar-text: #1B3A2F;
+  --hover-bg: rgba(129, 199, 132, 0.35);
+}
+
+[data-theme="dark"] {
+  /* === MODO OSCURO: Pradera nocturna === */
+  --bg: #0A1628;
+  --bg-gradient: linear-gradient(180deg, #0A1628 0%, #0D2137 30%, #122A1F 65%, #0F2418 100%);
+  --surface: rgba(18, 40, 35, 0.88);
+  --surface-solid: #16332C;
+  --text: #E8F5E9;
+  --text-light: #A5D6A7;
+
+  --blue: #4FC3F7;
+  --blue-mid: #29B6F6;
+  --blue-soft: #81D4FA;
+  --blue-light: #0288D1;
+  --blue-pale: #B3E5FC;
+
+  --olive: #81C784;
+  --green-soft: #66BB6A;
+  --green-pale: #1B5E20;
+  --green-dark: #2E7D32;
+  --green-glow: #A5D6A7;
+
+  --orange: #FFB74D;
+  --cyan: #4DD0E1;
+  --lime: #AED581;
+  --lime-light: #C5E1A5;
+  --yellow: #FFF176;
+  --gray-blue: #90A4AE;
+  --bubble: rgba(179, 229, 252, 0.22);
+  --bubble-border: rgba(179, 229, 252, 0.45);
+  --glow: rgba(129, 199, 132, 0.18);
+
+  --btn: #43A047;
+  --btn-hover: #66BB6A;
+  --border: rgba(129, 199, 132, 0.25);
+  --chip-bg: rgba(27, 94, 32, 0.55);
+  --input-bg: rgba(15, 36, 30, 0.9);
+  --shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+  --danger: #EF5350;
+
+  --sidebar-bg: rgba(12, 28, 24, 0.94);
+  --sidebar-text: #E8F5E9;
+  --hover-bg: rgba(67, 160, 71, 0.3);
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ========== PRADERA: cielo, sol/luna, burbujas ========== */
+body {
+  background: var(--bg-gradient) !important;
+  background-attachment: fixed !important;
+  color: var(--text);
+  transition: background 0.45s ease, color 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Burbujas de agua (muy visibles) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 18% 72%, var(--bubble) 0%, var(--bubble) 55%, transparent 62%),
+    radial-gradient(circle at 42% 85%, var(--bubble) 0%, var(--bubble) 50%, transparent 58%),
+    radial-gradient(circle at 68% 78%, var(--bubble) 0%, var(--bubble) 48%, transparent 56%),
+    radial-gradient(circle at 88% 90%, var(--bubble) 0%, var(--bubble) 52%, transparent 60%),
+    radial-gradient(circle at 30% 60%, var(--bubble) 0%, var(--bubble) 42%, transparent 50%),
+    radial-gradient(circle at 55% 68%, var(--bubble) 0%, var(--bubble) 38%, transparent 46%),
+    radial-gradient(circle at 75% 55%, var(--bubble) 0%, var(--bubble) 35%, transparent 43%),
+    radial-gradient(circle at 10% 50%, var(--bubble) 0%, var(--bubble) 30%, transparent 38%),
+    radial-gradient(circle at 92% 45%, var(--bubble) 0%, var(--bubble) 32%, transparent 40%),
+    radial-gradient(circle at 48% 40%, var(--bubble) 0%, var(--bubble) 28%, transparent 36%);
+  background-size:
+    120px 120px, 90px 90px, 140px 140px, 100px 100px, 70px 70px,
+    55px 55px, 48px 48px, 40px 40px, 60px 60px, 35px 35px;
+  background-repeat: no-repeat;
+  animation: bubbleRise 18s ease-in-out infinite;
+  opacity: 0.35;
+}
+
+/* Sol + nubes (modo claro) / Luna + estrellas (modo oscuro) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  /* Sol */
+  background-image:
+    radial-gradient(circle at 85% 12%, #FFF59D 0%, #FFEE58 25%, rgba(255, 235, 59, 0.4) 45%, transparent 60%),
+    /* Nubes suaves */
+    radial-gradient(ellipse 120px 40px at 20% 18%, rgba(255,255,255,0.9) 0%, transparent 70%),
+    radial-gradient(ellipse 90px 32px at 28% 20%, rgba(255,255,255,0.75) 0%, transparent 70%),
+    radial-gradient(ellipse 100px 36px at 55% 12%, rgba(255,255,255,0.85) 0%, transparent 70%),
+    radial-gradient(ellipse 80px 28px at 62% 14%, rgba(255,255,255,0.7) 0%, transparent 70%),
+    radial-gradient(ellipse 110px 38px at 40% 8%, rgba(255,255,255,0.8) 0%, transparent 70%),
+    /* Brillos en burbujas */
+    radial-gradient(circle at 20% 70%, rgba(255,255,255,0.95) 0%, transparent 8%),
+    radial-gradient(circle at 44% 83%, rgba(255,255,255,0.9) 0%, transparent 6%),
+    radial-gradient(circle at 70% 76%, rgba(255,255,255,0.9) 0%, transparent 7%);
+  background-size:
+    160px 160px,
+    200px 80px, 160px 60px, 180px 70px, 140px 55px, 190px 75px,
+    30px 30px, 22px 22px, 26px 26px;
+  background-repeat: no-repeat;
+  animation: softDrift 30s ease-in-out infinite alternate;
+}
+
+/* Modo oscuro: luna y estrellas en lugar de sol/nubes */
+[data-theme="dark"] body::after {
+  background-image:
+    /* Luna */
+    radial-gradient(circle at 82% 14%, #F5F5F5 0%, #E0E0E0 35%, rgba(224,224,224,0.25) 55%, transparent 65%),
+    /* Estrellas */
+    radial-gradient(circle at 12% 10%, #FFF 0%, transparent 2px),
+    radial-gradient(circle at 25% 22%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 40% 8%, #FFF 0%, transparent 2px),
+    radial-gradient(circle at 55% 18%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 70% 6%, #FFF 0%, transparent 2px),
+    radial-gradient(circle at 90% 25%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 15% 35%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 33% 15%, #FFF 0%, transparent 1px),
+    radial-gradient(circle at 48% 28%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 62% 12%, #FFF 0%, transparent 1px),
+    radial-gradient(circle at 78% 30%, #FFF 0%, transparent 2px),
+    radial-gradient(circle at 95% 8%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 8% 48%, #FFF 0%, transparent 1px),
+    radial-gradient(circle at 22% 55%, rgba(255,255,255,0.8) 0%, transparent 1px);
+  background-size:
+    90px 90px,
+    4px 4px, 3px 3px, 4px 4px, 3px 3px, 4px 4px, 3px 3px,
+    3px 3px, 2px 2px, 3px 3px, 2px 2px, 4px 4px, 3px 3px,
+    2px 2px, 2px 2px;
+  animation: softDrift 40s ease-in-out infinite alternate;
+}
+
+@keyframes bubbleRise {
+  0%   { transform: translateY(0); opacity: 0.95; }
+  50%  { transform: translateY(-28px); opacity: 1; }
+  100% { transform: translateY(-8px); opacity: 0.9; }
+}
+
+@keyframes softDrift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(12px); }
+}
+
+.main-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sidebar distinta del fondo */
+.sidebar {
+  position: relative;
+  z-index: 200;
+  background: var(--sidebar-bg) !important;
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+  border-right: 1px solid var(--border);
+  box-shadow: 4px 0 24px rgba(0,0,0,0.06);
+  color: var(--sidebar-text);
+}
+
+.sidebar .logo h2,
+.side-nav a {
+  color: var(--sidebar-text);
+}
+
+.side-nav a {
+  color: var(--text-light) !important;
+}
+.side-nav a:hover {
+  background-color: var(--hover-bg) !important;
+  color: var(--text) !important;
+}
+.side-nav a.active {
+  background: linear-gradient(135deg, var(--olive), var(--green-soft)) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px var(--glow);
+}
+
+/* Superficies cristalinas */
+.card,
+.progress-card,
+.task,
+.search-box,
+.course-card,
+.continue-card,
+.achievement,
+.setting-card,
+.stat-card,
+.profile-card {
+  background: var(--surface) !important;
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.card:hover,
+.course-card:hover,
+.achievement:hover,
+.task:hover {
+  box-shadow: 0 14px 40px var(--glow);
+  transform: translateY(-3px);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+  border-color: var(--green-soft);
+}
+
+
+/* Capa de burbujas nítidas (estilo cristal / gotas) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    /* Burbujas grandes nítidas */
+    radial-gradient(circle at 12% 18%, var(--bubble) 0%, var(--bubble) 42%, transparent 48%),
+    radial-gradient(circle at 88% 22%, var(--bubble) 0%, var(--bubble) 38%, transparent 45%),
+    radial-gradient(circle at 72% 68%, var(--bubble) 0%, var(--bubble) 35%, transparent 42%),
+    radial-gradient(circle at 22% 75%, var(--bubble) 0%, var(--bubble) 40%, transparent 47%),
+    radial-gradient(circle at 50% 40%, var(--bubble) 0%, var(--bubble) 28%, transparent 36%),
+    /* Burbujas medianas */
+    radial-gradient(circle at 35% 55%, var(--bubble) 0%, var(--bubble) 32%, transparent 40%),
+    radial-gradient(circle at 65% 15%, var(--bubble) 0%, var(--bubble) 30%, transparent 38%),
+    radial-gradient(circle at 8% 48%, var(--bubble) 0%, var(--bubble) 25%, transparent 33%),
+    radial-gradient(circle at 92% 55%, var(--bubble) 0%, var(--bubble) 28%, transparent 36%),
+    /* Reflejos verdes suaves */
+    radial-gradient(circle at 40% 25%, rgba(125, 255, 179, 0.2) 0%, transparent 18%),
+    radial-gradient(circle at 78% 80%, rgba(92, 184, 138, 0.15) 0%, transparent 20%),
+    radial-gradient(circle at 18% 88%, rgba(77, 232, 194, 0.12) 0%, transparent 16%);
+  background-size:
+    90px 90px, 70px 70px, 110px 110px, 80px 80px, 55px 55px,
+    45px 45px, 38px 38px, 50px 50px, 42px 42px,
+    280px 280px, 320px 320px, 240px 240px;
+  background-repeat: no-repeat;
+  animation: bubbleFloat 22s ease-in-out infinite alternate;
+  opacity: 0.4;
+}
+
+/* Segunda capa: brillos y borde de burbuja */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 14% 16%, rgba(255,255,255,0.9) 0%, transparent 8%),
+    radial-gradient(circle at 89% 20%, rgba(255,255,255,0.85) 0%, transparent 7%),
+    radial-gradient(circle at 73% 66%, rgba(255,255,255,0.8) 0%, transparent 6%),
+    radial-gradient(circle at 24% 73%, rgba(255,255,255,0.85) 0%, transparent 7%),
+    radial-gradient(circle at 51% 38%, rgba(255,255,255,0.75) 0%, transparent 5%);
+  background-size: 28px 28px, 22px 22px, 32px 32px, 24px 24px, 16px 16px;
+  background-repeat: no-repeat;
+  animation: bubbleFloat 22s ease-in-out infinite alternate-reverse;
+  opacity: 0.35;
+}
+
+@keyframes bubbleFloat {
+  0%   { transform: translateY(0px) translateX(0px); }
+  33%  { transform: translateY(-14px) translateX(6px); }
+  66%  { transform: translateY(-6px) translateX(-8px); }
+  100% { transform: translateY(10px) translateX(4px); }
+}
+
+.main-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* Superficies cristalinas acogedoras */
+.sidebar,
+.card,
+.progress-card,
+.task,
+.search-box,
+.course-card,
+.continue-card,
+.achievement,
+.setting-card,
+.stat-card,
+.profile-card {
+  background: var(--surface) !important;
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+/* Hover acogedor con brillo verde */
+.card:hover,
+.course-card:hover,
+.achievement:hover,
+.task:hover {
+  box-shadow: 0 14px 42px var(--glow);
+  transform: translateY(-3px);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+  border-color: var(--green-soft);
+}
+
+
+/* body styles moved to Frutiger Aero block */
+
+/* SIDEBAR */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background-color: var(--sidebar-bg);
+  box-shadow: var(--shadow);
+  padding: 30px 22px;
+  transition: left 0.3s ease;
+  z-index: 200;
+}
+
+.sidebar .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 45px; }
+.sidebar .logo img { width: 50px; }
+.sidebar .logo h2 { font-size: 1.3rem; }
+
+.side-nav a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  border-radius: 14px;
+  color: var(--text-light);
+  text-decoration: none;
+  margin-bottom: 6px;
+}
+
+.side-nav a i { width: 20px; text-align: center; }
+.side-nav a:hover { background-color: var(--hover-bg); color: var(--text); }
+.side-nav a.active { background: linear-gradient(135deg, var(--olive), var(--green-soft)); color: #FFFFFF; box-shadow: 0 4px 18px var(--glow); }
+
+.logout { display: flex; align-items: center; gap: 14px; padding: 13px 16px; color: var(--text-light); text-decoration: none; margin-top: 30px; }
+
+.menu-toggle {
+  display: none;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+/* LAYOUT */
+
+.main-wrap { margin-left: 260px; min-height: 100vh; }
+
+header {
+  width: 100%;
+  height: 85px;
+  padding: 0 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  background-color: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-right { display: flex; align-items: center; gap: 20px; }
+
+.notification {
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.profile { display: flex; align-items: center; gap: 10px; }
+.profile img { width: 45px; height: 45px; border-radius: 50%; }
+.profile span { font-weight: 600; }
+
+main { max-width: 1300px; margin: auto; padding: 40px; }
+
+/* SALUDO */
+
+.welcome { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+.welcome h1 { font-size: 2.6rem; margin-bottom: 10px; }
+.welcome p { color: var(--text-light); }
+.welcome h1 span { color: var(--blue-mid); }
+.welcome-pato { width: 170px; }
+
+/* BUSCADOR */
+
+.search-box {
+  background-color: var(--surface);
+  padding: 18px 25px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.search-box input { width: 100%; border: none; outline: none; font-size: 1rem; background: none; }
+.search-box button { display: grid; flex: 0 0 42px; width: 42px; height: 42px; place-items: center; border: 0; border-radius: 14px; background: var(--btn); color: #fff; cursor: pointer; }
+.search-box button:hover { background: var(--btn-hover); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.home-search-results { margin: -18px 0 35px; }
+.home-search-results[hidden], .home-search-status[hidden] { display: none; }
+.home-search-results > h2 { margin: 0 0 10px; font-size: 1.2rem; }
+.home-search-status { margin-bottom: 14px; color: var(--text-light); }
+.home-subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.home-subject-card {
+  display: flex; align-items: center; gap: 14px; min-width: 0; padding: 18px;
+  border: 1px solid var(--border); border-radius: 18px; background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.home-subject-icon { display: grid; flex: 0 0 48px; width: 48px; height: 48px; place-items: center; border-radius: 15px; background: color-mix(in srgb, var(--subject-color) 18%, transparent); color: var(--subject-color); font-size: 1.25rem; }
+.home-subject-info { flex: 1; min-width: 0; }
+.home-subject-info h3 { margin-bottom: 4px; font-size: 0.98rem; }
+.home-subject-info p { color: var(--text-light); font-size: 0.82rem; line-height: 1.45; }
+.home-subject-link { display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto; color: var(--olive); font-size: 0.82rem; font-weight: 700; }
+.home-subject-link:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+
+/* PROGRESO */
+
+.progress-card { background-color: var(--surface); border-radius: 22px; padding: 25px; margin-bottom: 40px; }
+.progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.progress-header span { font-weight: 700; color: var(--btn); }
+.progress { width: 100%; height: 14px; border-radius: 20px; background-color: var(--border); overflow: hidden; margin-bottom: 15px; }
+.progress-fill { width: 65%; height: 100%; background: linear-gradient(90deg, var(--olive), var(--cyan), var(--lime)); border-radius: 20px; }
+
+/* Contenido introductorio del inicio */
+.home-feature { margin: 0 0 38px; }
+.home-section-heading { max-width: 720px; margin: 0 0 20px; }
+.home-section-heading h2,
+.tip-content h2 { margin: 5px 0 8px; font-size: clamp(1.3rem, 2vw, 1.7rem); }
+.home-section-heading p,
+.method-step p,
+.tip-content p { color: var(--text-light); line-height: 1.65; }
+.home-eyebrow { color: var(--olive); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.learning-method { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.method-step {
+  display: flex; align-items: flex-start; gap: 15px; min-height: 150px; padding: 22px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow);
+}
+.method-icon {
+  display: grid; flex: 0 0 44px; width: 44px; height: 44px; place-items: center;
+  border-radius: 14px; background: var(--blue-light); color: var(--blue); font-size: 1.1rem;
+}
+.method-step h3 { margin: 2px 0 8px; font-size: 1rem; }
+.method-step p { font-size: 0.9rem; }
+.quacky-tip {
+  display: flex; align-items: center; gap: clamp(18px, 4vw, 38px); padding: 25px 32px;
+  overflow: hidden; border: 1px solid var(--border); border-radius: 24px;
+  background: linear-gradient(120deg, var(--surface), var(--blue-light)); box-shadow: var(--shadow);
+}
+[data-theme="dark"] .quacky-tip { background: linear-gradient(120deg, var(--surface), rgba(2, 136, 209, 0.2)); }
+.tip-mascot { display: grid; flex: 0 0 112px; width: 112px; height: 112px; place-items: center; border-radius: 50%; background: var(--surface); }
+.tip-mascot img { width: 92px; height: 92px; object-fit: contain; }
+.tip-content { max-width: 700px; }
+.tip-content p { margin-bottom: 14px; }
+.tip-prompt { display: inline-flex; align-items: center; gap: 8px; color: var(--green-dark); font-weight: 600; }
+[data-theme="dark"] .tip-prompt { color: var(--olive); }
+
+/* MATERIAS */
+
+.subjects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+.card { background-color: var(--surface); border-radius: 22px; padding: 25px; text-align: center; border-top: 5px solid var(--blue); }
+.card i { font-size: 3rem; margin-bottom: 18px; }
+.card h3 { margin-bottom: 10px; }
+.card p { color: var(--text-light); margin-bottom: 20px; }
+
+.card button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background-color: var(--btn);
+  color: #FFFFFF;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.card button:hover { background-color: var(--btn-hover); }
+
+/* Cada materia con su color de la paleta acuática */
+.card:nth-child(1) { border-top-color: var(--orange); }
+.card:nth-child(1) i { color: var(--orange); }
+.card:nth-child(1) button { background: linear-gradient(135deg, var(--orange), #FFB347); }
+.card:nth-child(1) button:hover { filter: brightness(1.1); }
+
+.card:nth-child(2) { border-top-color: var(--green-soft); }
+.card:nth-child(2) i { color: var(--green-soft); }
+.card:nth-child(2) button { background: linear-gradient(135deg, var(--green-soft), var(--olive)); }
+.card:nth-child(2) button:hover { filter: brightness(1.1); }
+
+.card:nth-child(3) { border-top-color: var(--lime); }
+.card:nth-child(3) i { color: #00C9A7; }
+.card:nth-child(3) button { background: linear-gradient(135deg, var(--lime), #00C9A7); color: #0D3B4C; }
+.card:nth-child(3) button:hover { filter: brightness(1.08); }
+
+.card:nth-child(4) { border-top-color: var(--blue-mid); }
+.card:nth-child(4) i { color: var(--blue-mid); }
+.card:nth-child(4) button { background: linear-gradient(135deg, var(--blue-mid), var(--cyan)); }
+.card:nth-child(4) button:hover { filter: brightness(1.1); }
+
+.card:nth-child(5) { border-top-color: var(--blue); }
+.card:nth-child(5) i { color: var(--blue); }
+.card:nth-child(5) button { background: linear-gradient(135deg, var(--blue), var(--blue-mid)); }
+.card:nth-child(5) button:hover { filter: brightness(1.1); }
+
+.card:nth-child(6) { border-top-color: var(--cyan); }
+.card:nth-child(6) i { color: var(--cyan); }
+.card:nth-child(6) button { background: linear-gradient(135deg, var(--cyan), var(--lime)); color: #0D3B4C; }
+.card:nth-child(6) button:hover { filter: brightness(1.08); }
+
+/* TITULOS */
+
+.section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.section-title a { color: var(--olive); text-decoration: none; font-weight: 600; }
+
+/* ACTIVIDADES */
+
+.tasks { margin-bottom: 50px; }
+
+.task {
+  background-color: var(--surface);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task h4 { margin-bottom: 5px; }
+.task p { color: var(--text-light); }
+
+.pending, .progress-status, .completed { padding: 8px 14px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; }
+.pending { background-color: var(--yellow); color: #C47A00; }
+.progress-status { background-color: var(--blue-soft); color: var(--blue); }
+.completed { background-color: var(--green-pale); color: var(--olive); }
+
+/* LOGROS */
+
+.achievements { margin-bottom: 100px; }
+.achievements h2 { margin-bottom: 25px; }
+.achievement-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+.achievement { background-color: var(--surface); border-radius: 20px; padding: 25px; text-align: center; font-size: 2rem; border-bottom: 4px solid var(--blue); }
+.achievement:nth-child(1) { border-bottom-color: var(--orange); }
+.achievement:nth-child(2) { border-bottom-color: var(--lime); }
+.achievement:nth-child(3) { border-bottom-color: var(--cyan); }
+.achievement:nth-child(4) { border-bottom-color: var(--yellow); }
+.achievement:nth-child(5) { border-bottom-color: var(--green-soft); }
+.achievement:nth-child(6) { border-bottom-color: var(--blue-pale); }
+.achievement h4 { margin-top: 12px; font-size: 1rem; }
+
+/* BARRA INFERIOR (móvil) */
+
+.bottom-nav { display: none; }
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .sidebar { left: -260px; }
+  .sidebar.open { left: 0; }
+  .main-wrap { margin-left: 0; }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; }
+  header { justify-content: space-between; }
+}
+
+@media (max-width: 900px) {
+  main { padding: 25px; }
+  .welcome { flex-direction: column; text-align: center; gap: 20px; }
+  .welcome h1 { font-size: 2rem; }
+  .welcome-pato { width: 130px; }
+  .task { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .learning-method { grid-template-columns: 1fr; }
+  .method-step { min-height: auto; }
+}
+
+@media (max-width: 700px) {
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--surface);
+    padding: 12px 0;
+  }
+
+  .bottom-nav a { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-light); text-decoration: none; font-size: 0.8rem; }
+  .bottom-nav .active { color: var(--olive); }
+  .profile span { display: none; }
+  .subjects { grid-template-columns: 1fr; }
+  main { padding: 20px; padding-bottom: 100px; }
+  .quacky-tip { align-items: flex-start; padding: 20px; }
+  .tip-mascot { flex-basis: 72px; width: 72px; height: 72px; }
+  .tip-mascot img { width: 64px; height: 64px; }
+}
+
+@media (max-width: 450px) {
+  .welcome h1 { font-size: 1.7rem; }
+  .card { padding: 20px; }
+  .quacky-tip { flex-direction: column; }
+  .tip-mascot { align-self: center; }
+}
+
+/* Botones brillantes estilo Aero */
+button, .course-btn, .continue-btn, .card button {
+  position: relative;
+  overflow: hidden;
+}
+button::after, .course-btn::after, .continue-btn::after, .card button::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -80%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+button:hover::after, .course-btn:hover::after, .continue-btn:hover::after, .card button:hover::after {
+  left: 120%;
+}
+
+
+/* Diálogos del Pato en home */
+.pato-welcome-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.pato-bubble {
+  position: relative;
+  max-width: 200px;
+  margin-bottom: 8px;
+  padding: 10px 14px;
+  background: var(--surface-solid, #fff);
+  color: var(--text, #1B3A2F);
+  border-radius: 16px;
+  border: 2px solid var(--border, rgba(46,125,50,0.28));
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  animation: patoBubblePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pato-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid var(--surface-solid, #fff);
+}
+[data-theme="dark"] .pato-bubble {
+  background: #16332C;
+  color: #E8F5E9;
+  border-color: rgba(129, 199, 132, 0.3);
+}
+[data-theme="dark"] .pato-bubble::after {
+  border-top-color: #16332C;
+}
+@keyframes patoBubblePop {
+  from { opacity: 0; transform: scale(0.85) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.welcome-pato {
+  transition: transform 0.25s ease;
+}
+.welcome-pato:hover {
+  transform: scale(1.06) rotate(-3deg);
+}

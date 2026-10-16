@@ -1,0 +1,605 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  /* === MODO CLARO: Pradera soleada === */
+  --bg: #87CEEB;
+  --bg-gradient: linear-gradient(180deg, #4FC3F7 0%, #81D4FA 25%, #B3E5FC 50%, #C8E6C9 78%, #A5D6A7 100%);
+  --surface: rgba(255, 255, 255, 0.88);
+  --surface-solid: #FFFFFF;
+  --text: #1B3A2F;
+  --text-light: #3D6B5A;
+
+  --blue: #0288D1;
+  --blue-mid: #29B6F6;
+  --blue-soft: #81D4FA;
+  --blue-light: #E1F5FE;
+  --blue-pale: #4FC3F7;
+
+  --olive: #2E7D32;
+  --green-soft: #66BB6A;
+  --green-pale: #C8E6C9;
+  --green-dark: #1B5E20;
+  --green-glow: #81C784;
+
+  --orange: #FFA726;
+  --cyan: #26C6DA;
+  --lime: #9CCC65;
+  --lime-light: #C5E1A5;
+  --yellow: #FFEE58;
+  --gray-blue: #78909C;
+  --bubble: rgba(255, 255, 255, 0.85);
+  --bubble-border: rgba(255, 255, 255, 0.95);
+  --glow: rgba(46, 125, 50, 0.2);
+
+  --btn: #2E7D32;
+  --btn-hover: #1B5E20;
+  --border: rgba(46, 125, 50, 0.28);
+  --chip-bg: rgba(200, 230, 201, 0.85);
+  --input-bg: rgba(255, 255, 255, 0.92);
+  --shadow: 0 10px 32px rgba(2, 136, 209, 0.12);
+  --danger: #E53935;
+
+  --sidebar-bg: rgba(255, 255, 255, 0.92);
+  --sidebar-text: #1B3A2F;
+  --hover-bg: rgba(129, 199, 132, 0.35);
+}
+
+[data-theme="dark"] {
+  /* === MODO OSCURO: Pradera nocturna === */
+  --bg: #0A1628;
+  --bg-gradient: linear-gradient(180deg, #0A1628 0%, #0D2137 30%, #122A1F 65%, #0F2418 100%);
+  --surface: rgba(18, 40, 35, 0.88);
+  --surface-solid: #16332C;
+  --text: #E8F5E9;
+  --text-light: #A5D6A7;
+
+  --blue: #4FC3F7;
+  --blue-mid: #29B6F6;
+  --blue-soft: #81D4FA;
+  --blue-light: #0288D1;
+  --blue-pale: #B3E5FC;
+
+  --olive: #81C784;
+  --green-soft: #66BB6A;
+  --green-pale: #1B5E20;
+  --green-dark: #2E7D32;
+  --green-glow: #A5D6A7;
+
+  --orange: #FFB74D;
+  --cyan: #4DD0E1;
+  --lime: #AED581;
+  --lime-light: #C5E1A5;
+  --yellow: #FFF176;
+  --gray-blue: #90A4AE;
+  --bubble: rgba(179, 229, 252, 0.22);
+  --bubble-border: rgba(179, 229, 252, 0.45);
+  --glow: rgba(129, 199, 132, 0.18);
+
+  --btn: #43A047;
+  --btn-hover: #66BB6A;
+  --border: rgba(129, 199, 132, 0.25);
+  --chip-bg: rgba(27, 94, 32, 0.55);
+  --input-bg: rgba(15, 36, 30, 0.9);
+  --shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+  --danger: #EF5350;
+
+  --sidebar-bg: rgba(12, 28, 24, 0.94);
+  --sidebar-text: #E8F5E9;
+  --hover-bg: rgba(67, 160, 71, 0.3);
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ========== PRADERA: cielo, sol/luna, burbujas ========== */
+body {
+  background: var(--bg-gradient) !important;
+  background-attachment: fixed !important;
+  color: var(--text);
+  transition: background 0.45s ease, color 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Burbujas de agua (muy visibles) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 18% 72%, var(--bubble) 0%, var(--bubble) 55%, transparent 62%),
+    radial-gradient(circle at 42% 85%, var(--bubble) 0%, var(--bubble) 50%, transparent 58%),
+    radial-gradient(circle at 68% 78%, var(--bubble) 0%, var(--bubble) 48%, transparent 56%),
+    radial-gradient(circle at 88% 90%, var(--bubble) 0%, var(--bubble) 52%, transparent 60%),
+    radial-gradient(circle at 30% 60%, var(--bubble) 0%, var(--bubble) 42%, transparent 50%),
+    radial-gradient(circle at 55% 68%, var(--bubble) 0%, var(--bubble) 38%, transparent 46%),
+    radial-gradient(circle at 75% 55%, var(--bubble) 0%, var(--bubble) 35%, transparent 43%),
+    radial-gradient(circle at 10% 50%, var(--bubble) 0%, var(--bubble) 30%, transparent 38%),
+    radial-gradient(circle at 92% 45%, var(--bubble) 0%, var(--bubble) 32%, transparent 40%),
+    radial-gradient(circle at 48% 40%, var(--bubble) 0%, var(--bubble) 28%, transparent 36%);
+  background-size:
+    120px 120px, 90px 90px, 140px 140px, 100px 100px, 70px 70px,
+    55px 55px, 48px 48px, 40px 40px, 60px 60px, 35px 35px;
+  background-repeat: no-repeat;
+  animation: bubbleRise 18s ease-in-out infinite;
+  opacity: 0.35;
+}
+
+/* Sol + nubes (modo claro) / Luna + estrellas (modo oscuro) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  /* Sol */
+  background-image:
+    radial-gradient(circle at 85% 12%, #FFF59D 0%, #FFEE58 25%, rgba(255, 235, 59, 0.4) 45%, transparent 60%),
+    /* Nubes suaves */
+    radial-gradient(ellipse 120px 40px at 20% 18%, rgba(255,255,255,0.9) 0%, transparent 70%),
+    radial-gradient(ellipse 90px 32px at 28% 20%, rgba(255,255,255,0.75) 0%, transparent 70%),
+    radial-gradient(ellipse 100px 36px at 55% 12%, rgba(255,255,255,0.85) 0%, transparent 70%),
+    radial-gradient(ellipse 80px 28px at 62% 14%, rgba(255,255,255,0.7) 0%, transparent 70%),
+    radial-gradient(ellipse 110px 38px at 40% 8%, rgba(255,255,255,0.8) 0%, transparent 70%),
+    /* Brillos en burbujas */
+    radial-gradient(circle at 20% 70%, rgba(255,255,255,0.95) 0%, transparent 8%),
+    radial-gradient(circle at 44% 83%, rgba(255,255,255,0.9) 0%, transparent 6%),
+    radial-gradient(circle at 70% 76%, rgba(255,255,255,0.9) 0%, transparent 7%);
+  background-size:
+    160px 160px,
+    200px 80px, 160px 60px, 180px 70px, 140px 55px, 190px 75px,
+    30px 30px, 22px 22px, 26px 26px;
+  background-repeat: no-repeat;
+  animation: softDrift 30s ease-in-out infinite alternate;
+}
+
+/* Modo oscuro: luna y estrellas en lugar de sol/nubes */
+[data-theme="dark"] body::after {
+  background-image:
+    /* Luna */
+    radial-gradient(circle at 82% 14%, #F5F5F5 0%, #E0E0E0 35%, rgba(224,224,224,0.25) 55%, transparent 65%),
+    /* Estrellas */
+    radial-gradient(circle at 12% 10%, #FFF 0%, transparent 2px),
+    radial-gradient(circle at 25% 22%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 40% 8%, #FFF 0%, transparent 2px),
+    radial-gradient(circle at 55% 18%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 70% 6%, #FFF 0%, transparent 2px),
+    radial-gradient(circle at 90% 25%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 15% 35%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 33% 15%, #FFF 0%, transparent 1px),
+    radial-gradient(circle at 48% 28%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 62% 12%, #FFF 0%, transparent 1px),
+    radial-gradient(circle at 78% 30%, #FFF 0%, transparent 2px),
+    radial-gradient(circle at 95% 8%, #FFF 0%, transparent 1.5px),
+    radial-gradient(circle at 8% 48%, #FFF 0%, transparent 1px),
+    radial-gradient(circle at 22% 55%, rgba(255,255,255,0.8) 0%, transparent 1px);
+  background-size:
+    90px 90px,
+    4px 4px, 3px 3px, 4px 4px, 3px 3px, 4px 4px, 3px 3px,
+    3px 3px, 2px 2px, 3px 3px, 2px 2px, 4px 4px, 3px 3px,
+    2px 2px, 2px 2px;
+  animation: softDrift 40s ease-in-out infinite alternate;
+}
+
+@keyframes bubbleRise {
+  0%   { transform: translateY(0); opacity: 0.95; }
+  50%  { transform: translateY(-28px); opacity: 1; }
+  100% { transform: translateY(-8px); opacity: 0.9; }
+}
+
+@keyframes softDrift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(12px); }
+}
+
+.main-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sidebar distinta del fondo */
+.sidebar {
+  position: relative;
+  z-index: 200;
+  background: var(--sidebar-bg) !important;
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+  border-right: 1px solid var(--border);
+  box-shadow: 4px 0 24px rgba(0,0,0,0.06);
+  color: var(--sidebar-text);
+}
+
+.sidebar .logo h2,
+.side-nav a {
+  color: var(--sidebar-text);
+}
+
+.side-nav a {
+  color: var(--text-light) !important;
+}
+.side-nav a:hover {
+  background-color: var(--hover-bg) !important;
+  color: var(--text) !important;
+}
+.side-nav a.active {
+  background: linear-gradient(135deg, var(--olive), var(--green-soft)) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px var(--glow);
+}
+
+/* Superficies cristalinas */
+.card,
+.progress-card,
+.task,
+.search-box,
+.course-card,
+.continue-card,
+.achievement,
+.setting-card,
+.stat-card,
+.profile-card {
+  background: var(--surface) !important;
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.card:hover,
+.course-card:hover,
+.achievement:hover,
+.task:hover {
+  box-shadow: 0 14px 40px var(--glow);
+  transform: translateY(-3px);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+  border-color: var(--green-soft);
+}
+
+
+/* Capa de burbujas nítidas (estilo cristal / gotas) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    /* Burbujas grandes nítidas */
+    radial-gradient(circle at 12% 18%, var(--bubble) 0%, var(--bubble) 42%, transparent 48%),
+    radial-gradient(circle at 88% 22%, var(--bubble) 0%, var(--bubble) 38%, transparent 45%),
+    radial-gradient(circle at 72% 68%, var(--bubble) 0%, var(--bubble) 35%, transparent 42%),
+    radial-gradient(circle at 22% 75%, var(--bubble) 0%, var(--bubble) 40%, transparent 47%),
+    radial-gradient(circle at 50% 40%, var(--bubble) 0%, var(--bubble) 28%, transparent 36%),
+    /* Burbujas medianas */
+    radial-gradient(circle at 35% 55%, var(--bubble) 0%, var(--bubble) 32%, transparent 40%),
+    radial-gradient(circle at 65% 15%, var(--bubble) 0%, var(--bubble) 30%, transparent 38%),
+    radial-gradient(circle at 8% 48%, var(--bubble) 0%, var(--bubble) 25%, transparent 33%),
+    radial-gradient(circle at 92% 55%, var(--bubble) 0%, var(--bubble) 28%, transparent 36%),
+    /* Reflejos verdes suaves */
+    radial-gradient(circle at 40% 25%, rgba(125, 255, 179, 0.2) 0%, transparent 18%),
+    radial-gradient(circle at 78% 80%, rgba(92, 184, 138, 0.15) 0%, transparent 20%),
+    radial-gradient(circle at 18% 88%, rgba(77, 232, 194, 0.12) 0%, transparent 16%);
+  background-size:
+    90px 90px, 70px 70px, 110px 110px, 80px 80px, 55px 55px,
+    45px 45px, 38px 38px, 50px 50px, 42px 42px,
+    280px 280px, 320px 320px, 240px 240px;
+  background-repeat: no-repeat;
+  animation: bubbleFloat 22s ease-in-out infinite alternate;
+  opacity: 0.4;
+}
+
+/* Segunda capa: brillos y borde de burbuja */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 14% 16%, rgba(255,255,255,0.9) 0%, transparent 8%),
+    radial-gradient(circle at 89% 20%, rgba(255,255,255,0.85) 0%, transparent 7%),
+    radial-gradient(circle at 73% 66%, rgba(255,255,255,0.8) 0%, transparent 6%),
+    radial-gradient(circle at 24% 73%, rgba(255,255,255,0.85) 0%, transparent 7%),
+    radial-gradient(circle at 51% 38%, rgba(255,255,255,0.75) 0%, transparent 5%);
+  background-size: 28px 28px, 22px 22px, 32px 32px, 24px 24px, 16px 16px;
+  background-repeat: no-repeat;
+  animation: bubbleFloat 22s ease-in-out infinite alternate-reverse;
+  opacity: 0.35;
+}
+
+@keyframes bubbleFloat {
+  0%   { transform: translateY(0px) translateX(0px); }
+  33%  { transform: translateY(-14px) translateX(6px); }
+  66%  { transform: translateY(-6px) translateX(-8px); }
+  100% { transform: translateY(10px) translateX(4px); }
+}
+
+.main-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* Superficies cristalinas acogedoras */
+.sidebar,
+.card,
+.progress-card,
+.task,
+.search-box,
+.course-card,
+.continue-card,
+.achievement,
+.setting-card,
+.stat-card,
+.profile-card {
+  background: var(--surface) !important;
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+/* Hover acogedor con brillo verde */
+.card:hover,
+.course-card:hover,
+.achievement:hover,
+.task:hover {
+  box-shadow: 0 14px 42px var(--glow);
+  transform: translateY(-3px);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+  border-color: var(--green-soft);
+}
+
+
+/* body styles moved to Frutiger Aero block */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background-color: var(--sidebar-bg);
+  box-shadow: var(--shadow);
+  padding: 30px 22px;
+  transition: left 0.3s ease;
+  z-index: 200;
+}
+
+.sidebar .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 45px; }
+.sidebar .logo img { width: 50px; }
+.sidebar .logo h2 { font-size: 1.3rem; }
+
+.side-nav a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  border-radius: 14px;
+  color: var(--text-light);
+  text-decoration: none;
+  margin-bottom: 6px;
+}
+
+.side-nav a i { width: 20px; text-align: center; }
+.side-nav a:hover { background-color: var(--hover-bg); color: var(--text); }
+.side-nav a.active { background: linear-gradient(135deg, var(--olive), var(--green-soft)); color: #FFFFFF; box-shadow: 0 4px 18px var(--glow); }
+
+.logout { display: flex; align-items: center; gap: 14px; padding: 13px 16px; color: var(--text-light); text-decoration: none; margin-top: 30px; }
+
+.menu-toggle {
+  display: none;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.main-wrap { margin-left: 260px; min-height: 100vh; }
+
+header {
+  width: 100%;
+  height: 85px;
+  padding: 0 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  background-color: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-right { display: flex; align-items: center; gap: 20px; }
+
+.notification {
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.profile { display: flex; align-items: center; gap: 10px; }
+.profile img { width: 45px; height: 45px; border-radius: 50%; }
+.profile span { font-weight: 600; }
+
+main { max-width: 900px; margin: auto; padding: 40px; }
+
+.page-title { margin-bottom: 30px; }
+.page-title h1 { font-size: 2.2rem; margin-bottom: 8px; }
+.page-title p { color: var(--text-light); }
+
+.settings-block {
+  background-color: var(--surface);
+  border-radius: 22px;
+  padding: 28px;
+  margin-bottom: 25px;
+}
+
+.settings-block h3 { margin-bottom: 20px; }
+
+.setting-field { margin-bottom: 18px; }
+.setting-field label { display: block; font-size: 0.85rem; color: var(--text-light); margin-bottom: 6px; }
+
+.setting-field input,
+.setting-field select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text);
+  background-color: var(--input-bg);
+}
+
+.save-btn {
+  border: none;
+  background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+  color: #FFFFFF;
+  padding: 13px 24px;
+  border-radius: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+.toggle-row p { font-weight: 600; margin-bottom: 3px; }
+.toggle-row span { font-size: 0.8rem; color: var(--text-light); }
+
+.switch { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--border);
+  border-radius: 30px;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--surface);
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider { background-color: var(--btn); }
+.switch input:checked + .slider::before { transform: translateX(20px); }
+
+.theme-options { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+
+.theme-card {
+  flex: 1;
+  min-width: 110px;
+  background-color: var(--input-bg);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.theme-card input { display: none; }
+.theme-card i { font-size: 1.4rem; color: var(--btn); display: block; margin-bottom: 8px; }
+.theme-card input:checked ~ span { font-weight: 700; color: var(--btn); }
+.theme-card:has(input:checked) { border-color: var(--btn); }
+
+.danger-zone p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 18px; }
+.danger-actions { display: flex; gap: 15px; flex-wrap: wrap; }
+
+.danger-btn {
+  border: none;
+  padding: 12px 22px;
+  border-radius: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: var(--danger);
+  color: #FFFFFF;
+}
+
+.danger-btn.outline {
+  background-color: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.bottom-nav { display: none; }
+
+@media (max-width: 1100px) {
+  .sidebar { left: -260px; }
+  .sidebar.open { left: 0; }
+  .main-wrap { margin-left: 0; }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; }
+  header { justify-content: space-between; }
+}
+
+@media (max-width: 900px) {
+  main { padding: 25px; }
+}
+
+@media (max-width: 700px) {
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--surface);
+    padding: 12px 0;
+  }
+
+  .bottom-nav a { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-light); text-decoration: none; font-size: 0.8rem; }
+  .bottom-nav .active { color: var(--btn); }
+  .profile span { display: none; }
+  main { padding: 20px; padding-bottom: 100px; }
+}
+
+/* Botones brillantes estilo Aero */
+button, .course-btn, .continue-btn, .card button {
+  position: relative;
+  overflow: hidden;
+}
+button::after, .course-btn::after, .continue-btn::after, .card button::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -80%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+button:hover::after, .course-btn:hover::after, .continue-btn:hover::after, .card button:hover::after {
+  left: 120%;
+}
+

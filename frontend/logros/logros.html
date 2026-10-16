@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Logros</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/logros.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .ach-grupo { margin: 28px 0 14px; font-size: 1.15rem; }
+    .achievement .ach-fecha { display: block; margin-top: 8px; font-size: 0.74rem; color: var(--olive); font-weight: 600; }
+    .achievement.unlocked { border-color: var(--green-soft); }
+    .achievement.unlocked .achievement-icon { filter: drop-shadow(0 4px 8px var(--glow)); }
+    .ach-avance { height: 7px; border-radius: 10px; background: var(--green-pale); overflow: hidden; margin: 10px 0 4px; }
+    .ach-avance div { height: 100%; border-radius: 10px; background: var(--btn); }
+    .ach-numero { font-size: 0.74rem; color: var(--text-light); }
+    .achievement.locked { opacity: 0.85; }
+    .achievement.locked .achievement-icon { filter: grayscale(1); opacity: 0.55; }
+    .ach-error { padding: 18px; border-radius: 16px; background: rgba(229, 57, 53, 0.12); border: 1px solid var(--danger); }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+    <nav class="side-nav">
+      <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../logros/logros.html" class="active"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-title">
+        <h1>Tus logros</h1>
+        <p>Gana insignias terminando juegos, sumando puntos y manteniendo tu racha</p>
+      </section>
+
+      <section class="progress-card">
+        <div class="progress-header">
+          <h3>Logros desbloqueados</h3>
+          <span id="achCount">0 / 0</span>
+        </div>
+        <div class="progress"><div class="progress-fill" id="achBar" style="width:0%"></div></div>
+        <p id="achText">Cargando tus logros…</p>
+      </section>
+
+      <div id="achContenido"></div>
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script src="../js/difficulty.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/shell.js"></script>
+  <script>
+    (async function () {
+      const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      const cont = document.getElementById('achContenido');
+      const r = await SapiensAuth.api('/logros');
+      if (!r.ok) {
+        document.getElementById('achText').textContent = 'No se pudieron cargar tus logros.';
+        cont.innerHTML = '<p class="ach-error">' + esc(r.error) + '</p>';
+        return;
+      }
+
+      const { logros, obtenidas, total } = r.data;
+      const pct = total ? Math.round((obtenidas / total) * 100) : 0;
+      document.getElementById('achCount').textContent = obtenidas + ' / ' + total;
+      document.getElementById('achBar').style.width = pct + '%';
+      document.getElementById('achText').textContent = obtenidas === 0
+        ? '¡Termina tu primer juego para ganar tu primera insignia!'
+        : 'Llevas ' + obtenidas + ' de ' + total + ' insignias. ¡Sigue así!';
+
+      const fecha = (f) => new Date(f).toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' });
+      const tarjeta = (a) => a.obtenida
+        ? '<div class="achievement unlocked"><div class="achievement-icon" aria-hidden="true">' + a.icono + '</div><h4>' + esc(a.nombre) + '</h4><p>' + esc(a.descripcion) + '</p><span class="ach-fecha">Ganada el ' + fecha(a.fecha) + '</span></div>'
+        : '<div class="achievement locked"><div class="achievement-icon" aria-hidden="true">' + a.icono + '</div><h4>' + esc(a.nombre) + '</h4><p>' + esc(a.descripcion) + '</p>' +
+          '<div class="ach-avance" role="img" aria-label="Avance ' + a.actual + ' de ' + a.meta + '"><div style="width:' + Math.round((a.actual / a.meta) * 100) + '%"></div></div>' +
+          '<span class="ach-numero">' + a.actual.toLocaleString('es-CO') + ' / ' + a.meta.toLocaleString('es-CO') + '</span></div>';
+
+      const ganadas = logros.filter((a) => a.obtenida);
+      const pendientes = logros.filter((a) => !a.obtenida);
+      let html = '';
+      if (ganadas.length) html += '<h2 class="ach-grupo">🏆 Ganadas</h2><section class="achievements-grid">' + ganadas.map(tarjeta).join('') + '</section>';
+      if (pendientes.length) html += '<h2 class="ach-grupo">🎯 Por conseguir</h2><section class="achievements-grid">' + pendientes.map(tarjeta).join('') + '</section>';
+      cont.innerHTML = html;
+    })();
+  </script>
+</body>
+</html>

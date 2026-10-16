@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { requiereSesion } from '../../middleware/sesion.js';
 import { connection } from '../../config/mysql/dbmysql.js';
+import { emitirEvento } from '../../services/n8n.service.js';
 import { hashContrasena, verificarContrasena, crearToken, leerToken } from '../../utils/seguridad.js';
 
 const router = Router();
@@ -81,6 +82,7 @@ router.post('/registro', async (req, res) => {
             [ROL_ESTUDIANTE, nombre, apellido, correo, hash, JSON.stringify(preferencias)],
         );
         const [filas] = await connection.query('SELECT * FROM usuarios WHERE id_usuario = ?', [resultado.insertId]);
+        emitirEvento('usuario_registrado', { proveedor: 'correo', usuario: { id: filas[0].id_usuario, nombre, apellido, correo } });
         res.status(201).json(respuestaSesion(filas[0]));
     } catch (error) {
         console.error('Error en registro:', error.message);
@@ -146,6 +148,7 @@ router.post('/google', async (req, res) => {
             );
             const [filas] = await connection.query('SELECT * FROM usuarios WHERE id_usuario = ?', [resultado.insertId]);
             usuario = filas[0];
+            emitirEvento('usuario_registrado', { proveedor: 'google', usuario: { id: usuario.id_usuario, nombre, apellido, correo } });
         } else if (!usuario.foto_url && datos.picture) {
             await connection.query('UPDATE usuarios SET foto_url = ? WHERE id_usuario = ?', [datos.picture, usuario.id_usuario]);
             usuario.foto_url = datos.picture;

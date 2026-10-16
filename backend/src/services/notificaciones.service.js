@@ -1,5 +1,6 @@
 import { connection } from '../config/mysql/dbmysql.js';
 import { enviarCorreo, plantilla, urlApp } from './correo.service.js';
+import { emitirEvento } from './n8n.service.js';
 
 /* ============================================================
    Notificaciones: aparecen en la campana y, si el usuario lo permite en Ajustes
@@ -40,6 +41,8 @@ export async function notificar(idUsuario, { tipo, titulo, mensaje, url = null, 
             'INSERT INTO notificaciones (id_usuario, tipo, titulo, mensaje, url) VALUES (?, ?, ?, ?, ?)',
             [idUsuario, tipo, titulo.slice(0, 120), mensaje.slice(0, 300), url],
         );
+
+        emitirEvento('notificacion', { usuario: { id: idUsuario }, tipo, titulo, mensaje, url });
 
         if (correo) {
             const [filas] = await connection.query('SELECT correo, nombre FROM usuarios WHERE id_usuario = ?', [idUsuario]);

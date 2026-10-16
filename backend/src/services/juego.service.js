@@ -1,5 +1,6 @@
 import { connection } from '../config/mysql/dbmysql.js';
 import { evaluarInsignias } from './logros.service.js';
+import { emitirEvento } from './n8n.service.js';
 
 /* ============================================================
    Lógica del juego. Todo se califica AQUÍ, en el servidor:
@@ -380,6 +381,12 @@ export async function finalizar(idUsuario, idIntento) {
     const insigniasNuevas = intento.estado === 'en_curso' ? await evaluarInsignias(idUsuario).catch((e) => { console.error('Error evaluando insignias:', e.message); return []; }) : [];
 
     const perfil = await leerPerfil(idUsuario);
+    if (intento.estado === 'en_curso') {
+        emitirEvento('partida_finalizada', {
+            usuario: { id: idUsuario }, idTema: intento.id_tema, total, aciertos, porcentaje, estrellas, xp,
+            nivel: perfil.nivel, racha: perfil.racha, insignias: insigniasNuevas.map((i) => i.nombre || i),
+        });
+    }
     return {
         total, aciertos, errores: total - aciertos, porcentaje, estrellas, xp, bono,
         puntosTotales: perfil.puntosTotales, racha: perfil.racha, nivel: perfil.nivel,

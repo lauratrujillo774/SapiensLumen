@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { emitirEvento, n8nEnviaCorreos } from './n8n.service.js';
 
 /* ============================================================
    Envío de correos (invitaciones, logros, recordatorios, resumen semanal).
@@ -55,6 +56,8 @@ ${cuerpo}${caja}${accion}
 
 /** Envía un correo. Nunca lanza: devuelve true si se envió, false si no. */
 export async function enviarCorreo({ para, asunto, texto, html }) {
+    // Si n8n envía los correos, la app solo le pasa el mensaje listo
+    if (n8nEnviaCorreos()) return emitirEvento('correo', { para, asunto, texto, html });
     if (!correoConfigurado() && !transporte) {
         if (!avisoSinCorreo) {
             avisoSinCorreo = true;

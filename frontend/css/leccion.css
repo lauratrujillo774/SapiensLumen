@@ -147,3 +147,9 @@
   .ln-root { padding: 16px; margin: 12px 8px; }
   .ln-nav .ln-btn { flex: 1; }
 }
+
+/* En celular hay una barra fija abajo (bottom-nav) y el botón flotante de peces:
+   se deja espacio al final para que Anterior / Siguiente no queden tapados */
+@media (max-width: 700px) {
+  .ln-root { margin-bottom: calc(130px + env(safe-area-inset-bottom, 0px)); }
+}

@@ -59,7 +59,7 @@ export async function leerProgreso(idUsuario, grado = null) {
     const [actividad] = await connection.query(
         `SELECT DATE_FORMAT(DATE(fecha), '%Y-%m-%d') AS dia, SUM(puntos) AS puntos
          FROM movimientos_puntos WHERE id_estudiante = ? AND fecha >= DATE_SUB(CURDATE(), INTERVAL 13 DAY)
-         GROUP BY DATE(fecha) ORDER BY dia`,
+         GROUP BY dia ORDER BY dia`,
         [idUsuario],
     );
 

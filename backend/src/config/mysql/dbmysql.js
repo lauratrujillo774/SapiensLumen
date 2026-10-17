@@ -35,6 +35,9 @@ const connection = mysql.createPool(
 // aunque el servidor en internet esté en otra zona horaria
 connection.pool.on('connection', (conexion) => {
     conexion.query(`SET time_zone = '${process.env.MYSQL_ZONA_HORARIA || '-05:00'}'`);
+    // Mismas reglas SQL en todos lados (Aiven trae MySQL 8, más estricto que MariaDB/XAMPP):
+    // sin ONLY_FULL_GROUP_BY ni ANSI_QUOTES, y con los modos estrictos habituales
+    conexion.query("SET SESSION sql_mode = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'");
 });
 
 

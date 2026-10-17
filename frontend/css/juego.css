@@ -134,3 +134,70 @@
   .jg-resps { grid-template-columns: 1fr; }
   .jg-resps.vf { grid-template-columns: 1fr 1fr; }
 }
+
+/* ============================================================
+   Responsive: tablet y celular
+   ============================================================ */
+
+/* Los textos largos nunca deben salirse del botón o de la tarjeta */
+.jg-btn, .jg-resp, .jg-mini, .jg-chip { max-width: 100%; }
+.jg-btn { text-align: center; line-height: 1.25; }
+.jg-resp { min-width: 0; overflow-wrap: anywhere; }
+.jg-pregunta, .jg-fb, .jg-pista { overflow-wrap: anywhere; }
+.jg-pregunta h2 { overflow-wrap: anywhere; }
+
+/* En pantallas táctiles no hay "hover": se evita que el botón se quede levantado tras tocarlo */
+@media (hover: none) {
+  .jg-btn:hover:not(:disabled), .jg-resp:hover:not(:disabled) { transform: none; box-shadow: none; }
+  .jg-btn:active:not(:disabled), .jg-resp:active:not(:disabled) { transform: scale(.97); }
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .jg-root { margin: 14px 10px; }
+}
+
+/* Celular (el mismo punto donde aparece la barra fija de abajo) */
+@media (max-width: 700px) {
+  /* espacio para la barra fija de navegación y el botón flotante de peces */
+  .jg-root { margin-bottom: calc(130px + env(safe-area-inset-bottom, 0px)); }
+
+  /* Botones grandes, fáciles de tocar y a todo el ancho */
+  .jg-btn { min-height: 48px; padding: 12px 18px; font-size: 1rem; }
+  .jg-acciones { flex-direction: column; align-items: stretch; }
+  .jg-acciones .jg-btn { width: 100%; }
+
+  /* Pista / Comprobar / Siguiente: uno debajo del otro, con el principal arriba */
+  .jg-fila { flex-direction: column-reverse; align-items: stretch; }
+  .jg-fila > span:empty { display: none; }
+  .jg-fila .jg-btn { width: 100%; }
+
+  /* Herramientas de lectura (A−, A+, espacio, calma, voz): se reparten el ancho */
+  .jg-herr { gap: 8px; }
+  .jg-mini { flex: 1 1 calc(50% - 8px); min-height: 42px; padding: 8px 10px; text-align: center; }
+
+  /* Barra superior: Salir arriba y el progreso a todo el ancho */
+  .jg-top { gap: 8px; }
+  .jg-back { min-height: 44px; display: inline-flex; align-items: center; }
+  .jg-barra { flex: 1 1 100%; order: 3; }
+
+  /* Preguntas y respuestas */
+  .jg-pregunta { padding: 16px; border-radius: 16px; }
+  .jg-pregunta h2 { font-size: 1.2em; }
+  .jg-resps { gap: 10px; }
+  .jg-resp { min-height: 60px; padding: 12px 14px; }
+  .jg-input { padding: 14px 16px; font-size: 1.05em; }
+
+  /* Resultados */
+  .jg-estrellas { font-size: 2.6em; }
+  .jg-datos { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .jg-portada .gran { font-size: 2.8em; }
+}
+
+/* Celulares pequeños */
+@media (max-width: 380px) {
+  .jg-root { padding: 12px; margin-left: 6px; margin-right: 6px; }
+  .jg-resps.vf { grid-template-columns: 1fr; }
+  .jg-mini { flex-basis: 100%; }
+  .jg-resp { font-size: .95em; }
+}

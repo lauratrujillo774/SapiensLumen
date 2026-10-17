@@ -343,3 +343,7 @@ body.auth-page {
 /* Botón oficial de Google */
 .google-wrap { display: flex; justify-content: center; min-height: 44px; margin-bottom: 4px; }
 .google-aviso { font-size: 0.85rem; color: var(--text-light); text-align: center; line-height: 1.4; }
+
+/* El patico del logo lleva a la página de inicio */
+.auth-logo-link { display: inline-block; line-height: 0; cursor: pointer; }
+.auth-logo-link:focus-visible { outline: 3px solid #2E7D32; outline-offset: 4px; border-radius: 16px; }

@@ -101,6 +101,18 @@ const SapiensCompanions = {
     return id ? this.getById(id) : null;
   },
 
+  clearSelected() {
+    localStorage.removeItem(COMPANION_KEY);
+    try {
+      const raw = localStorage.getItem('sapiens_user');
+      if (raw) {
+        const user = JSON.parse(raw);
+        delete user.companionId;
+        localStorage.setItem('sapiens_user', JSON.stringify(user));
+      }
+    } catch (_) {}
+  },
+
   setSelected(id) {
     const c = this.getById(id);
     if (!c) return false;

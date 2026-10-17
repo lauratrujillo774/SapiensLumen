@@ -176,6 +176,8 @@ function limpiarPreferencias(entrada = {}) {
     if (grado >= 6 && grado <= 11) limpia.grade = grado;
     if (typeof entrada.companionId === 'string' && ID_COMPANION.test(entrada.companionId)) {
         limpia.companionId = entrada.companionId;
+    } else if (entrada.companionId === null) {
+        limpia.companionId = null;   // quitar el compañero
     }
     return limpia;
 }

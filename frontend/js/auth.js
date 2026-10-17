@@ -227,7 +227,7 @@ const SapiensAuth = {
     if (cambios.fotoUrl !== undefined) body.foto_url = cambios.fotoUrl;
     const preferencias = {};
     if (cambios.grade) preferencias.grade = parseInt(cambios.grade, 10);
-    if (cambios.companionId) preferencias.companionId = cambios.companionId;
+    if (cambios.companionId !== undefined) preferencias.companionId = cambios.companionId || null;
     if (Object.keys(preferencias).length) body.preferencias = preferencias;
 
     const r = await this._api('/auth/perfil', {

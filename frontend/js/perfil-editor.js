@@ -113,9 +113,12 @@
       const actual = usuario().fotoUrl || '';
       return {
         html: '<p class="pe-ayuda">Elige uno de los avatares de la plataforma:</p><div class="picker-grid small" role="listbox" aria-label="Avatares">' +
-          compañeros().map((c) => '<button type="button" class="picker-item' + (actual === 'img/companions/' + c.id + '.png' ? ' selected' : '') + '" data-avatar="img/companions/' + c.id + '.png" title="' + esc(c.name) + '" role="option"><img src="' + esc(c.img) + '" alt="' + esc(c.name) + '"></button>').join('') + '</div>' + acciones('Guardar avatar'),
+          compañeros().map((c) => '<button type="button" class="picker-item' + (actual === 'img/companions/' + c.id + '.png' ? ' selected' : '') + '" data-avatar="img/companions/' + c.id + '.png" title="' + esc(c.name) + '" role="option"><img src="' + esc(c.img) + '" alt="' + esc(c.name) + '"></button>').join('') + '</div>' +
+          (actual ? '<button type="button" class="btn-mini" data-quitar><i class="fa-solid fa-trash"></i> Quitar avatar</button>' : '') + acciones('Guardar avatar'),
         alAbrir: (f) => {
           f.querySelector('.pe-btn[type="submit"]').disabled = true;
+          const quitar = f.querySelector('[data-quitar]');
+          if (quitar) quitar.addEventListener('click', () => enviar(f, { fotoUrl: null }, 'Avatar quitado: ahora usas tus iniciales'));
           f.querySelectorAll('[data-avatar]').forEach((b) => b.addEventListener('click', () => {
             f.querySelectorAll('[data-avatar]').forEach((x) => x.classList.toggle('selected', x === b));
             f.dataset.elegido = b.dataset.avatar;
@@ -130,10 +133,13 @@
       const actual = window.SapiensCompanions ? SapiensCompanions.getSelectedId() : null;
       return {
         html: '<p class="pe-ayuda">Tu compañero te acompaña mientras estudias:</p><div class="picker-grid" role="listbox" aria-label="Compañeros">' +
-          compañeros().map((c) => '<button type="button" class="picker-item' + (c.id === actual ? ' selected' : '') + '" data-id="' + c.id + '" title="' + esc(c.name) + '" role="option"><img src="' + esc(c.img) + '" alt="' + esc(c.name) + '"><span>' + esc(c.name) + '</span></button>').join('') + '</div>' + acciones('Guardar compañero'),
+          compañeros().map((c) => '<button type="button" class="picker-item' + (c.id === actual ? ' selected' : '') + '" data-id="' + c.id + '" title="' + esc(c.name) + '" role="option"><img src="' + esc(c.img) + '" alt="' + esc(c.name) + '"><span>' + esc(c.name) + '</span></button>').join('') + '</div>' +
+          (actual ? '<button type="button" class="btn-mini" data-quitar><i class="fa-solid fa-trash"></i> Quitar compañero</button>' : '') + acciones('Guardar compañero'),
         alAbrir: (f) => {
           f.dataset.elegido = actual || '';
           f.querySelector('.pe-btn[type="submit"]').disabled = true;
+          const quitar = f.querySelector('[data-quitar]');
+          if (quitar) quitar.addEventListener('click', () => enviar(f, { companionId: null }, 'Compañero quitado', EDITORES.companero()));
           f.querySelectorAll('[data-id]').forEach((b) => b.addEventListener('click', () => {
             f.querySelectorAll('[data-id]').forEach((x) => x.classList.toggle('selected', x === b));
             f.dataset.elegido = b.dataset.id;
@@ -142,7 +148,7 @@
         },
         validar: (c, f) => (f.dataset.elegido ? '' : 'Elige un compañero.'),
         leer: (f) => ({ companionId: f.dataset.elegido }),
-        despues: (c) => { if (window.SapiensCompanions && c.companionId) SapiensCompanions.setSelected(c.companionId); },
+        despues: (c) => { if (window.SapiensCompanions) { if (c.companionId) SapiensCompanions.setSelected(c.companionId); else SapiensCompanions.clearSelected(); } },
       };
     },
   };

@@ -24,6 +24,7 @@
     <nav class="side-nav">
       <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
       <a href="../cursos/cursos.html" class="active"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../tutor-ia/chat.html"><i class="fa-solid fa-comments"></i><span>Tutor IA</span></a>
       <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
       <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
       <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
@@ -54,6 +55,8 @@
       </div>
     </div>
 
+    <div class="tutor-atajo"><a id="preguntarTutor" class="ln-btn sec" href="../tutor-ia/chat.html"><i class="fa-solid fa-comments"></i> Preguntar al tutor sobre este tema</a></div>
+
     <section id="temaPanel" class="ln-root">
       <p class="path-msg">Cargando el tema…</p>
     </section>
@@ -62,6 +65,7 @@
   <nav class="bottom-nav">
     <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
     <a href="../cursos/cursos.html" class="active"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../tutor-ia/chat.html"><i class="fa-solid fa-comments"></i><span>Tutor</span></a>
     <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
     <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
   </nav>
@@ -76,6 +80,13 @@
       document.querySelector('.sidebar-overlay')?.classList.remove('open');
       document.body.classList.remove('sidebar-open');
     });
+  </script>
+  <script>
+    (function () {
+      var id = new URLSearchParams(location.search).get("tema");
+      var a = document.getElementById("preguntarTutor");
+      if (a && id) a.href = "../tutor-ia/chat.html?tema=" + encodeURIComponent(id);
+    })();
   </script>
   <script src="../js/shell.js"></script>
 </body>

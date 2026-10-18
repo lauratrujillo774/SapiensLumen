@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sapiens Lumen | Tutor IA</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/path.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/ajolote.css">
+  <link rel="stylesheet" href="../css/tutor.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <link rel="icon" type="image/png" href="/img/pato.png">
+</head>
+<body class="tutor-body">
+  <div class="sidebar-overlay"></div>
+
+  <aside class="sidebar">
+    <button class="sidebar-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+    <div class="logo">
+      <img src="../img/pato.png" alt="Pato">
+      <h2>Sapiens Lumen</h2>
+    </div>
+    <nav class="side-nav">
+      <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+      <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+      <a href="../tutor-ia/chat.html" class="active"><i class="fa-solid fa-comments"></i><span>Tutor IA</span></a>
+      <a href="../logros/logros.html"><i class="fa-solid fa-trophy"></i><span>Logros</span></a>
+      <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+      <a href="../ajustes/ajustes.html"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+    </nav>
+    <a href="#" class="logout" data-logout><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></a>
+  </aside>
+
+  <div class="main-wrap">
+    <header>
+      <button class="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+      <div class="header-right">
+        <button class="notification"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile">
+          <img data-user-avatar src="https://ui-avatars.com/api/?name=Usuario&background=2E7D32&color=fff" alt="Perfil">
+          <span data-user-name>Usuario</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="tutor" id="tutor" aria-label="Chat con el tutor">
+      <div class="tutor-top">
+        <img class="tutor-avatar" src="../img/pato.png" alt="">
+        <div class="tutor-quien">
+          <strong>Quacky, tu tutor</strong>
+          <span id="tutorTema">Pregúntame lo que quieras estudiar</span>
+        </div>
+        <button type="button" class="tutor-nuevo" id="tutorNuevo" title="Empezar una conversación nueva">
+          <i class="fa-solid fa-rotate-right" aria-hidden="true"></i><span>Nueva</span>
+        </button>
+      </div>
+
+      <div class="tutor-mensajes" id="tutorMensajes" role="log" aria-live="polite" aria-label="Mensajes"></div>
+
+      <div class="tutor-sugerencias" id="tutorSugerencias"></div>
+
+      <form class="tutor-form" id="tutorForm" autocomplete="off">
+        <label for="tutorTexto" class="sr-only">Escribe tu pregunta</label>
+        <textarea id="tutorTexto" rows="1" maxlength="2000" placeholder="Escribe tu pregunta…" enterkeyhint="send"></textarea>
+        <button type="submit" class="tutor-enviar" id="tutorEnviar" aria-label="Enviar">
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        </button>
+      </form>
+      <p class="tutor-aviso">La IA puede equivocarse: confirma con tu docente.</p>
+    </section>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../home/home.html"><i class="fa-solid fa-house"></i><span>Inicio</span></a>
+    <a href="../cursos/cursos.html"><i class="fa-solid fa-book"></i><span>Cursos</span></a>
+    <a href="../tutor-ia/chat.html" class="active"><i class="fa-solid fa-comments"></i><span>Tutor</span></a>
+    <a href="../progreso/progreso.html"><i class="fa-solid fa-chart-line"></i><span>Progreso</span></a>
+    <a href="../perfil/Profile.html"><i class="fa-solid fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/tutor.js"></script>
+  <script>
+    document.querySelector('.sidebar-close')?.addEventListener('click', () => {
+      document.querySelector('.sidebar')?.classList.remove('open');
+      document.querySelector('.sidebar-overlay')?.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    });
+  </script>
+  <script src="../js/shell.js"></script>
+</body>
+</html>

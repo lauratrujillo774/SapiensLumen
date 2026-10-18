@@ -1,0 +1,123 @@
+/* ============================================================
+   Tutor IA (chat) – responsive: celular primero
+   ============================================================ */
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Alto de la tarjeta = pantalla - encabezado - (barra inferior en celular) */
+.tutor {
+  --alto-header: 72px;
+  display: flex; flex-direction: column;
+  height: calc(100dvh - var(--alto-header) - 28px);
+  min-height: 420px;
+  max-width: 900px; margin: 14px auto;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 22px;
+  box-shadow: var(--shadow); color: var(--text); overflow: hidden;
+}
+
+/* ---------- parte superior ---------- */
+.tutor-top { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface-solid); }
+.tutor-avatar { width: 44px; height: 44px; object-fit: contain; flex: 0 0 auto; }
+.tutor-quien { display: flex; flex-direction: column; min-width: 0; flex: 1; line-height: 1.3; }
+.tutor-quien strong { font-size: 1rem; }
+.tutor-quien span { font-size: .82rem; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tutor-nuevo {
+  display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; min-height: 40px; padding: 8px 14px;
+  border-radius: 999px; border: 1.5px solid var(--border); background: var(--surface); color: var(--olive);
+  font: inherit; font-weight: 600; font-size: .85rem; cursor: pointer;
+}
+.tutor-nuevo:hover { background: var(--olive); color: #fff; }
+
+/* ---------- mensajes ---------- */
+.tutor-mensajes { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; overscroll-behavior: contain; scroll-behavior: smooth; }
+.tm { max-width: min(85%, 680px); padding: 11px 15px; border-radius: 18px; line-height: 1.6; font-size: .97rem; overflow-wrap: anywhere; word-break: break-word; }
+.tm.yo { align-self: flex-end; background: var(--btn); color: #fff; border-bottom-right-radius: 6px; white-space: pre-wrap; }
+.tm.ia { align-self: flex-start; background: var(--surface-solid); border: 1px solid var(--border); border-bottom-left-radius: 6px; }
+.tm.error { border-color: #E57373; background: rgba(229, 57, 53, .1); }
+.tm p { margin: 0 0 9px; }
+.tm p:last-child, .tm ul:last-child, .tm ol:last-child { margin-bottom: 0; }
+.tm ul, .tm ol { margin: 0 0 9px; padding-left: 1.3em; }
+.tm li { margin-bottom: 4px; }
+.tm strong { font-weight: 700; }
+.tm code { background: rgba(46, 125, 50, .12); padding: 1px 6px; border-radius: 6px; font-family: Consolas, Monaco, monospace; font-size: .9em; }
+.tm pre { background: #14261F; color: #E8F5E9; padding: 12px 14px; border-radius: 12px; overflow-x: auto; margin: 0 0 9px; -webkit-overflow-scrolling: touch; }
+.tm pre code { background: none; padding: 0; color: inherit; white-space: pre; }
+.tm .katex-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+.tm .katex { font-size: 1.05em; }
+.tm-reintentar { margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--olive); background: transparent; color: var(--olive); font: inherit; font-weight: 600; cursor: pointer; }
+.tm-reintentar:hover { background: var(--olive); color: #fff; }
+
+/* escribiendo… */
+.tm.escribiendo { display: inline-flex; gap: 5px; align-items: center; padding: 14px 16px; }
+.tm.escribiendo i { width: 8px; height: 8px; border-radius: 50%; background: var(--text-light); animation: tm-punto 1.1s infinite ease-in-out; }
+.tm.escribiendo i:nth-child(2) { animation-delay: .15s; }
+.tm.escribiendo i:nth-child(3) { animation-delay: .3s; }
+@keyframes tm-punto { 0%, 80%, 100% { transform: scale(.6); opacity: .5; } 40% { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .tm.escribiendo i { animation: none; } .tutor-mensajes { scroll-behavior: auto; } }
+
+/* ---------- bienvenida y sugerencias ---------- */
+.tutor-sugerencias { display: flex; gap: 8px; padding: 0 16px 10px; overflow-x: auto; flex: 0 0 auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tutor-sugerencias::-webkit-scrollbar { display: none; }
+.tutor-sugerencias:empty { display: none; }
+.tutor-sugerencias button {
+  flex: 0 0 auto; min-height: 40px; padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--border);
+  background: var(--surface-solid); color: var(--text); font: inherit; font-size: .88rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.tutor-sugerencias button:hover { background: var(--olive); color: #fff; border-color: var(--olive); }
+
+/* ---------- escribir ---------- */
+.tutor-form { display: flex; align-items: flex-end; gap: 10px; padding: 10px 14px 6px; border-top: 1px solid var(--border); background: var(--surface-solid); }
+.tutor-form textarea {
+  flex: 1; min-width: 0; resize: none; max-height: 140px; padding: 12px 16px; border-radius: 20px;
+  border: 2px solid var(--border); background: var(--surface); color: var(--text); font: inherit; font-size: 1rem; line-height: 1.4;
+  overflow-y: hidden; scrollbar-width: thin;
+}
+.tutor-form textarea:focus { outline: none; border-color: var(--olive); }
+.tutor-enviar {
+  flex: 0 0 auto; width: 48px; height: 48px; border-radius: 50%; border: none; background: var(--btn); color: #fff;
+  font-size: 1.05rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.tutor-enviar:hover:not(:disabled) { background: var(--btn-hover); }
+.tutor-enviar:disabled { opacity: .45; cursor: not-allowed; }
+.tutor-form textarea:focus-visible, .tutor-enviar:focus-visible, .tutor-nuevo:focus-visible, .tutor-sugerencias button:focus-visible, .tm-reintentar:focus-visible { outline: 3px solid var(--blue, #29B6F6); outline-offset: 2px; }
+.tutor-aviso { margin: 0; padding: 0 16px 10px; font-size: .72rem; text-align: center; color: var(--text-light); background: var(--surface-solid); }
+
+/* ---------- celular ---------- */
+@media (max-width: 700px) {
+  /* la barra fija de abajo mide ~70px: la tarjeta termina justo encima */
+  .tutor {
+    height: calc(100dvh - var(--alto-header) - 84px - env(safe-area-inset-bottom, 0px));
+    margin: 8px 8px 0; border-radius: 18px; min-height: 360px;
+  }
+  .tutor-top { padding: 10px 12px; gap: 10px; }
+  .tutor-avatar { width: 38px; height: 38px; }
+  .tutor-nuevo span { display: none; }
+  .tutor-nuevo { width: 42px; height: 42px; padding: 0; justify-content: center; }
+  .tutor-mensajes { padding: 12px; gap: 10px; }
+  .tm { max-width: 92%; font-size: .95rem; padding: 10px 13px; }
+  .tutor-form { padding: 8px 10px 4px; gap: 8px; }
+  .tutor-form textarea { font-size: 16px; }   /* 16px evita que iOS haga zoom al escribir */
+  .tutor-aviso { font-size: .68rem; padding: 0 12px 8px; }
+}
+
+/* ---------- celulares pequeños o en horizontal ---------- */
+@media (max-width: 380px) {
+  .tutor { margin: 6px 4px 0; border-radius: 14px; }
+  .tm { max-width: 96%; }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .tutor { min-height: 0; }
+  .tutor-aviso { display: none; }
+  .tutor-sugerencias { display: none; }
+}
+
+/* ---------- pantalla grande ---------- */
+@media (min-width: 1101px) {
+  .tutor { height: calc(100dvh - var(--alto-header) - 36px); margin-top: 18px; }
+}
+
+/* el patico del menú no debe desplazar el chat */
+body.tutor-body { overflow-x: hidden; }
+
+/* Los botones flotantes de efectos (pez / subir) taparían el botón de enviar: aquí se ocultan */
+body.tutor-body .ambient-controls, body.tutor-body .scroll-top, body.tutor-body #scrollTopBtn { display: none !important; }

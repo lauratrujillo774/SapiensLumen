@@ -37,7 +37,7 @@ export const hayIA = () => proveedoresDisponibles().length > 0;
 export function nombreModelo(p = proveedor()) {
     if (p === 'anthropic') return env('ANTHROPIC_MODEL') || 'claude-opus-5-5';
     if (p === 'groq') return env('GROQ_MODEL') || 'openai/gpt-oss-120b';
-    return env('GEMINI_MODEL') || 'gemini-2.5-flash';
+    return env('GEMINI_MODEL') || 'gemini-flash-latest';
 }
 
 /* ---------- Claude (cliente reemplazable en pruebas) ---------- */
@@ -77,7 +77,7 @@ const instruccionJSON = (sistema, schema) =>
 
 // Reintentos ante límite de uso (429) o sobrecarga (5xx). Si hay otro proveedor de respaldo,
 // se espera poco para pasar a él cuanto antes.
-async function pedirPorHTTP({ url, cabeceras, cuerpo, mensajeError, esperas }) {
+export async function pedirPorHTTP({ url, cabeceras, cuerpo, mensajeError, esperas }) {
     let ultimo = null;
     for (const espera of esperas) {
         if (espera) await dormir(espera);
@@ -119,7 +119,7 @@ async function conValidacion(schema, pedirTexto, nombre) {
 }
 
 /* ---------- Gemini (REST) ---------- */
-function errorDeGemini(estado, cuerpo) {
+export function errorDeGemini(estado, cuerpo) {
     const detalle = cuerpo?.error?.message || '';
     if (estado === 400 && /api key/i.test(detalle)) return 'La clave de Gemini (GEMINI_API_KEY) no es válida.';
     if (estado === 401 || estado === 403) return 'La clave de Gemini no tiene permiso. Revisa GEMINI_API_KEY en el .env.';
@@ -155,7 +155,7 @@ async function conGemini({ sistema, pedido, schema, maxTokens }, esperas) {
 }
 
 /* ---------- Groq (API compatible con OpenAI) ---------- */
-function errorDeGroq(estado, cuerpo) {
+export function errorDeGroq(estado, cuerpo) {
     const detalle = cuerpo?.error?.message || '';
     if (estado === 401) return 'La clave de Groq (GROQ_API_KEY) no es válida.';
     if (estado === 403) return 'La clave de Groq no tiene permiso. Revisa GROQ_API_KEY en el .env.';

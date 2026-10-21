@@ -299,8 +299,23 @@ export async function leerPerfil(idUsuario) {
          WHERE i.id_estudiante = ? AND i.estado = 'completado'`,
         [idUsuario],
     );
+    // Estrellas: la mejor de cada tema (90 % o más = 3, 70 % = 2, 40 % = 1), igual que al terminar una partida
+    const [[{ estrellas }]] = await connection.query(
+        `SELECT COALESCE(SUM(mejor), 0) AS estrellas FROM (
+            SELECT r.id_tema, MAX(CASE
+                WHEN i.aciertos + i.errores = 0 THEN 0
+                WHEN ROUND(i.aciertos * 100 / (i.aciertos + i.errores)) >= 90 THEN 3
+                WHEN ROUND(i.aciertos * 100 / (i.aciertos + i.errores)) >= 70 THEN 2
+                WHEN ROUND(i.aciertos * 100 / (i.aciertos + i.errores)) >= 40 THEN 1
+                ELSE 0 END) AS mejor
+            FROM intentos_reto i JOIN retos r ON r.id_reto = i.id_reto
+            WHERE i.id_estudiante = ? AND i.estado = 'completado'
+            GROUP BY r.id_tema) t`,
+        [idUsuario],
+    );
     return {
         puntosTotales: p.puntos_totales,
+        estrellas: Number(estrellas),
         racha: p.racha_actual,
         rachaMaxima: p.racha_maxima,
         temasJugados: Number(temas),

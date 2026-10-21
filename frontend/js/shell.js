@@ -58,7 +58,7 @@
 
   function pintarGrado() {
     const g = gradoActual();
-    botonGrado.querySelector('.grado-texto').textContent = g ? 'Grado ' + g + '°' : 'Elige tu grado';
+    botonGrado.querySelector('.grado-texto').innerHTML = g ? '<span class="g-palabra">Grado </span>' + g + '°' : 'Elige tu grado';
     menuGrado.innerHTML = '<p class="grado-titulo">¿En qué grado estás?</p>' + GRADOS.map(([n, nombre]) =>
       '<button type="button" role="menuitemradio" aria-checked="' + (n === g) + '" data-grado="' + n + '"' + (n === g ? ' class="actual"' : '') + '>' +
       '<b>' + n + '°</b><span>' + nombre + '</span>' + (n === g ? '<i class="fa-solid fa-check" aria-hidden="true"></i>' : '') + '</button>').join('');
@@ -154,6 +154,46 @@
     setTimeout(() => { t.classList.add('fuera'); setTimeout(() => t.remove(), 400); }, 4500);
   }
   window.SapiensShell = { toast, abrirGrado: () => { botonGrado.scrollIntoView({ block: 'nearest' }); abrirGrado(); } };
+
+  /* ---------- Estrellas y puntos: siempre visibles arriba, en cualquier pantalla ---------- */
+  const usuarioActual = SapiensAuth.getUser() || {};
+  const CLAVE_STATS = 'sapiens_stats@u' + usuarioActual.id;
+  const puntosEl = document.createElement('a');
+  puntosEl.className = 'hdr-puntos';
+  puntosEl.href = '../progreso/progreso.html';
+  puntosEl.title = 'Tus estrellas y puntos (ver mi progreso)';
+  puntosEl.innerHTML =
+    '<span class="hp-est"><i class="fa-solid fa-star" aria-hidden="true"></i><b data-hp="estrellas">0</b></span>' +
+    '<span class="hp-pts"><b data-hp="puntos">0</b><small>pts</small></span>';
+  derecha.insertBefore(puntosEl, derecha.firstChild);
+  const elEstrellas = puntosEl.querySelector('[data-hp="estrellas"]');
+  const elPuntos = puntosEl.querySelector('[data-hp="puntos"]');
+  const fmt = (n) => Number(n || 0).toLocaleString('es-CO');
+  let statsActuales = null;
+
+  function pintarPuntos(s, animar) {
+    if (!s) return;
+    const subio = animar && statsActuales && (s.puntos > statsActuales.puntos || s.estrellas > statsActuales.estrellas);
+    statsActuales = s;
+    elEstrellas.textContent = fmt(s.estrellas);
+    elPuntos.textContent = fmt(s.puntos);
+    puntosEl.setAttribute('aria-label', s.estrellas + ' estrellas y ' + s.puntos + ' puntos. Ver mi progreso');
+    if (subio) { puntosEl.classList.remove('sube'); void puntosEl.offsetWidth; puntosEl.classList.add('sube'); }
+  }
+  try { pintarPuntos(JSON.parse(localStorage.getItem(CLAVE_STATS) || 'null'), false); } catch (_) { /* sin copia local */ }
+
+  async function refrescarPuntos() {
+    const r = await SapiensAuth.api('/juego/perfil');
+    if (!r.ok) return;
+    const s = { puntos: Number(r.data.puntosTotales) || 0, estrellas: Number(r.data.estrellas) || 0 };
+    pintarPuntos(s, true);
+    try { localStorage.setItem(CLAVE_STATS, JSON.stringify(s)); } catch (_) { /* sin guardado */ }
+  }
+  window.SapiensShell.refrescarPuntos = refrescarPuntos;
+  refrescarPuntos();
+  // al volver a la pestaña o con el botón "atrás", se actualiza
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refrescarPuntos(); });
+  window.addEventListener('pageshow', (e) => { if (e.persisted) refrescarPuntos(); });
 
   /* ---------- contadores ---------- */
   let ultimoTotal = null;

@@ -254,6 +254,7 @@
   function sincronizar(r) {
     try {
       localStorage.setItem('totalXp', String(r.puntosTotales));
+      if (window.SapiensShell && SapiensShell.refrescarPuntos) SapiensShell.refrescarPuntos();
       localStorage.setItem('streak', String(r.racha));
       localStorage.setItem('lastStudyDate', new Date().toISOString().slice(0, 10));
       const asignatura = LEGACY[area.clave] || 'science';

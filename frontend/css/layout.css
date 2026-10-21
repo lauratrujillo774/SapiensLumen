@@ -689,3 +689,44 @@
   .hdr-grado .grado-flecha { display: none; }
   .grado-menu { position: fixed; top: 64px; left: 4vw; right: 4vw; min-width: 0; }
 }
+
+/* ============================================================
+   Estrellas y puntos en el encabezado (todas las páginas)
+   ============================================================ */
+.hdr-puntos {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 45px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.hdr-puntos:hover { background: var(--hover-bg, rgba(129, 199, 132, .35)); }
+.hdr-puntos:focus-visible { outline: 3px solid var(--blue, #0288D1); outline-offset: 2px; }
+.hdr-puntos .hp-est, .hdr-puntos .hp-pts { display: inline-flex; align-items: center; gap: 6px; }
+.hdr-puntos .hp-est i { color: #FFB300; font-size: 1rem; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .15)); }
+.hdr-puntos b { font-weight: 800; font-variant-numeric: tabular-nums; }
+.hdr-puntos .hp-pts { padding-left: 12px; border-left: 1.5px solid var(--border); }
+.hdr-puntos small { font-size: .72rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: .04em; }
+.hdr-puntos.sube { animation: hdrPuntosSube .7s ease; }
+@keyframes hdrPuntosSube { 0% { transform: scale(1); } 35% { transform: scale(1.14); background: rgba(255, 213, 79, .55); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .hdr-puntos.sube { animation: none; } }
+
+@media (max-width: 700px) {
+  .hdr-puntos { height: 40px; padding: 0 11px; gap: 8px; font-size: .88rem; }
+  .hdr-puntos .hp-pts { padding-left: 8px; }
+}
+/* celulares pequeños: se quitan palabras para que todo quepa en una fila */
+@media (max-width: 480px) {
+  .hdr-puntos { padding: 0 9px; gap: 6px; }
+  .hdr-puntos .hp-pts { padding-left: 6px; }
+  .hdr-puntos small, .hdr-grado .g-palabra { display: none; }
+  .header-right { gap: 6px !important; }
+}

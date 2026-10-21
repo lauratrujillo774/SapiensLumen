@@ -123,7 +123,7 @@
   function pintarTodo() {
     lista.innerHTML = '';
     if (!mensajes.length) {
-      lista.appendChild(burbuja('tutor', 'Hola ' + (usuario.firstName || usuario.name || '') + ' 👋 Soy **Quacky**, tu tutor. Puedes preguntarme dudas de cualquier materia, pedirme que te explique un tema paso a paso, que te ayude con un ejercicio o que te haga un quiz de práctica. ¿Por dónde empezamos?'));
+      lista.appendChild(burbuja('tutor', 'Hola ' + (usuario.firstName || usuario.name || '') + ' 👋 Soy **Maestro Cheddar**, tu tutor. Puedes preguntarme dudas de cualquier materia, pedirme que te explique un tema paso a paso, que te ayude con un ejercicio o que te haga un quiz de práctica. ¿Por dónde empezamos?'));
     } else {
       mensajes.forEach((m) => lista.appendChild(burbuja(m.rol, m.texto)));
     }

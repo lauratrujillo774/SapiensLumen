@@ -131,7 +131,7 @@
     return herramientas() +
       '<div class="jg-top"><button class="jg-back" data-acc="salir">✕ Salir</button>' +
       '<div class="jg-barra" aria-hidden="true"><div style="width:' + Math.round((e.i + (fin ? 1 : 0)) / n * 100) + '%"></div></div>' +
-      '<span class="jg-chip">Pregunta ' + (e.i + 1) + ' de ' + n + '</span><span class="jg-chip">⭐ ' + e.puntos + '</span>' +
+      '<span class="jg-chip"><span class="jg-pc">Pregunta </span>' + (e.i + 1) + '<span class="jg-pc"> de </span><span class="jg-mv">/</span>' + n + '</span><span class="jg-chip" aria-label="Puntos: ' + e.puntos + '">⭐ ' + e.puntos + ' pts</span>' +
       (e.racha >= 2 ? '<span class="jg-chip">🔥 x' + e.racha + '</span>' : '') + '</div>' +
       '<div class="jg-pregunta"><span class="tipo">' + TIPOS[p.tipo] + ' · ' + p.puntos + ' pts</span><h2 tabindex="-1" data-foco>' + esc(p.enunciado) + '</h2></div>' +
       cuerpo + pistasHtml + comentario + acciones;

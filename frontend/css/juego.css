@@ -201,3 +201,29 @@
   .jg-mini { flex-basis: 100%; }
   .jg-resp { font-size: .95em; }
 }
+
+/* ============================================================
+   Barra de estado del juego (pregunta, estrellas/puntos, racha): siempre visible arriba
+   ============================================================ */
+.jg-top {
+  position: sticky; top: 0; z-index: 30;
+  margin: 0 -22px 14px; padding: 10px 22px;
+  background: var(--surface-solid);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .07);
+}
+.jg-chip { flex: 0 0 auto; }
+/* en computador: "Pregunta 4 de 10"; en celular: "4/10" (para que todo quepa en una fila) */
+.jg-mv { display: none; }
+@media (max-width: 700px) {
+  .jg-top { margin: 0 -14px 12px; padding: 8px 14px; gap: 6px 8px; }
+  .jg-barra { height: 8px; }
+  .jg-pc { display: none; }
+  .jg-mv { display: inline; }
+  .jg-chip { padding: 4px 10px; font-size: .85em; }
+  .jg-top .jg-back { min-height: 36px; }
+}
+@media (max-width: 380px) {
+  .jg-top { margin: 0 -12px 12px; padding: 8px 12px; }
+  .jg-chip { padding: 5px 9px; font-size: .82em; }
+}
